@@ -7,7 +7,6 @@ import AdEntry from './admin pages/ADEntry/AdEntry';
 import AdLeaderboard from './admin pages/ADLeaderboard/AdLeaderboard';
 import AdProfile from './admin pages/ADProfile/AdProfile';
 import AdLogout from './admin pages/ADLogout/Logout';
-import AdInsight from './admin pages/ADInsight/AdInsight';
 import LogoutDialog from './components/LogoutDialog'; // Corrected import path
 import SUSignIn from './SuperUser pages/SUSignIn/SUSignIn';
 import SUHome from './SuperUser pages/SUHome/SUHome';
@@ -15,6 +14,7 @@ import SUInsight from './SuperUser pages/SUInsight/SUInsight';
 import SUDirectory from './SuperUser pages/SUDirectory/SUDirectory';
 import SULeaderboard from './SuperUser pages/SULeaderboard/SULeaderboard';
 import SUProfile from './SuperUser pages/SUProfile/SUProfile';
+import WSInsightAnalytics from './admin pages/ADInsight/WSInsightAnalytics';
 
 const App = () => {
   const handleClose = () => {
@@ -32,7 +32,7 @@ const App = () => {
         <Route path="/adleaderboard" element={<AdLeaderboard />} />
         <Route path="/adprofile" element={<AdProfile />} />
         <Route path="/adlogout" element={<AdLogout />} />
-        <Route path="/adinsight" element={<AdInsight />} />
+        <Route path="/adinsight" element={<WSInsightAnalytics />} />
         <Route path="/logoutdialog" element={<LogoutDialog />} />
         <Route path="/susignin" element={<SUSignIn />} />
         <Route path="/suhome" element={<SUHome />} />
