@@ -1,8 +1,8 @@
+import { ArcElement, BarElement, CategoryScale, Chart, LinearScale, Tooltip } from 'chart.js';
 import React, { useCallback, useState } from "react";
-import AdNavBar from "../../components/AdNavBar";
+import { Bar, Pie } from 'react-chartjs-2';
 import { useNavigate } from "react-router-dom";
-import { Pie, Bar } from 'react-chartjs-2'; 
-import { Chart, ArcElement, BarElement, Tooltip, CategoryScale, LinearScale } from 'chart.js';
+import AdNavBar from "../../components/AdNavBar";
 import './WSInsightAnalytics.css';
 
 Chart.register(ArcElement, Tooltip, BarElement, CategoryScale, LinearScale);
@@ -10,7 +10,29 @@ Chart.register(ArcElement, Tooltip, BarElement, CategoryScale, LinearScale);
 const WSInsightAnalytics = () => {
   const navigate = useNavigate();
   const [currentYear, setCurrentYear] = useState(2024);
+  const [currentOffice, setCurrentOffice] = useState("SSO - Student Concerns");
+  const [isOpen, setIsOpen] = useState(false);
   const [isFeedbackVisible, setFeedbackVisible] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState(null);
+
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+  };
+
+  const handleStatusChange = (event) => {
+    setSelectedStatus(event.target.value);
+  };
+
+  const offices = [
+    "SSO - Student Concerns",
+    "OPC - Borrowing of Equipment", 
+    "CORE - Borrowing Equipment",
+    "PACUBAS - Janitorial Services",
+    "CIT-U Clinic - Health Services",
+    "CIT-U Guidance Center - Mental Health Services",
+    "TSG - Account, Wildconnect, Outlook Concerns"
+  ];
 
   const onHomeTextClick = useCallback(() => {
     navigate("/adhome");
@@ -46,10 +68,11 @@ const WSInsightAnalytics = () => {
     setFeedbackVisible(prev => !prev);
   };
   
-   // Data for the donut chart
-   const approvedReports = 80; 
-   const deniedReports = 20;
-   
+  // Data for the donut chart
+  const approvedReports = 80; 
+  const deniedReports = 20;
+
+
   const data = {
     labels: ['Approved', 'Denied'],
     datasets: [
@@ -170,13 +193,32 @@ const barOptions = {
           <span className='_2024'>{currentYear}</span>
           <img className="arrow_right" alt="" src="/WsInsight_Rightbtn.png" onClick={incrementYear}/>
         </div>
-        <div className="OfficeContainer">
-        <span className="OfficeLabel">Office</span>
-  <div className="OfficeSelection">
-    <img className="OfficeIcon" src="/officeUserIcon.png" alt="Office Icon"/>
-    <span className="OfficeName">Clinic Office</span>
+        <div className="dropdown-container">
+        <label className="dropdown-label">Office</label>
+        <div className="dropdown-header" onClick={() => setIsOpen(!isOpen)}>
+          <div className="flex items-center">
+            <img className="OfficeIcon" src="/officeUserIcon.png" alt="Office Icon" width="24" height="24"/>
+            <span className="ml-2">{currentOffice}</span>
           </div>
+          <span className="dropdown-arrow">▼</span>
         </div>
+        
+        {isOpen && (
+          <div className="dropdown-list">
+            {offices.map((office) => (
+              <div 
+                key={office}
+                className="dropdown-item" 
+                onClick={() => {
+                  setCurrentOffice(office);
+                  setIsOpen(false);
+                }}
+              >
+                {office}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="BarGraphContainer" >
@@ -281,63 +323,90 @@ const barOptions = {
   <>
     <div className={`ReportListSection ${isFeedbackVisible ? 'visible' : 'hidden'}`}></div>
     <div className="WSInsightBox2" />
-    <div className='TableContainer'>
-      <div className='GroupTable'>
-        <div className='Table'>
-          <div className='_1'>
-            <span className=''>Name</span>
-          </div>
-          <div className='_2_1'>
-            <span className='DateVerified'>Submission Date</span>
-          </div>
-          <div className='_3'>
-            <span className='Status'>Status</span>
-          </div>
-          <div className='_4'>
-            <span className='Reason'>Date Verified</span>
-          </div>
-          <div className='_5'>
-            <span className='Category'>Category</span>
-          </div>
-          
-          {/* Sample rows with data */}
-          <div className='_6'>
-            <span className='name'>Richard Molina</span>
-          </div>
-          <div className='_7'>
-            <span className='_20240116'>2024-01-16</span>
-          </div>
-          <div className='_8'>
-            <span className='Approved_1'>Approved</span>
-          </div>
-          <div className='_9'>
-            <span className='_20240116_1'>2024-01-16 | 10:05 AM</span>
-          </div>
-          <div className='_10'>
-            <span className='Category_1'>Critical Report</span>
-          </div>
+    <div className="filter-section">
+       <div className="filter-row">
+         {/* Month Filter */}
+         <div className="filter-group">
+           <div className="filter-icon">📅</div>
+           <select 
+             value={selectedMonth}
+             onChange={(e) => setSelectedMonth(e.target.value)}
+             className="filter-select"
+           >
+             <option>January</option>
+             <option>February</option>
+             <option>March</option>
+             <option>April</option>
+             <option>May</option>
+             <option>June</option>
+             <option>July</option>
+             <option>August</option>
+             <option>September</option>
+             <option>October</option>
+             <option>November</option>
+             <option>December</option>
+           </select>
+         </div>
 
-          {/* Repeat rows as needed */}
-          <div className='_6'>
-            <span className='name'>Richard Molina</span>
+         {/* Status Filter */}
+         <div className="filter-group">
+           <div className="filter-icon">✓</div>
+           <select
+             value={selectedStatus}
+             onChange={(e) => setSelectedStatus(e.target.value)}
+             className="filter-select"
+           >
+             <option>Approved</option>
+             <option>Denied</option>
+           </select>
+         </div>
+
+         {/* Download Button */}
+         <button className="download-btn">
+           ⬇️
+         </button>
+       </div>
+     </div>
+          <div className="TableContainer">
+            <div className="GroupTable">
+              <div className="Table">
+                <div className="_1">
+                  <span className="SubmissionDate">Name</span>
+                </div>
+                <div className="_2_1">
+                  <span className="DateVerified">Submission Date</span>
+                </div>
+                <div className="_3">
+                  <span className="Status">Status</span>
+                </div>
+                <div className="_4">
+                  <span className="Reason">Date Verified</span>
+                </div>
+                <div className="_15">
+                  <span className="PointsEarned">Category</span>
+                </div>
+                
+                <div className="_6">
+                  <span className="_20240116">Richard Molina</span>
+                </div>
+                <div className="_7">
+                  <span className="_20240116_1">2024-01-16</span>
+                </div>
+                <div className="_8">
+                  <span className="Approved_1">Approved</span>
+                </div>
+                <div className="_9">
+                  <span className="_20240116_1">2024-01-16 | 10:05 AM</span>
+                </div>
+                <div className="_16">
+                  <span className="_5_1">Critical Report</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className='_7'>
-            <span className='_20240116'>2024-01-16</span>
-          </div>
-          <div className='_8'>
-            <span className='Approved_1'>Approved</span>
-          </div>
-          <div className='_9'>
-            <span className='_20240116_1'>2024-01-16 | 10:05 AM</span>
-          </div>
-          <div className='_10'>
-            <span className='Category_1'>Critical Report</span>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
-  </>
-)}
 
 
       <div className='ReportFeedbackContainer'>
@@ -351,8 +420,7 @@ const barOptions = {
         onClick={toggleFeedback}
       />
   </div>
-
-    </div>
+  </div>
   );
 };
 
