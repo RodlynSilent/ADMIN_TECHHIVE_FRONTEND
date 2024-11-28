@@ -1,0 +1,2072 @@
+.WSInsightAnalytics_WSInsightAnalytics {
+    width: 100%;
+    position: relative;
+    background: linear-gradient(180deg, #fdfbc9 54.1%, #f9d67b); /* Background styling */
+    overflow: hidden;
+    text-align: left;
+    color: #8a252c;
+    font-family: var(--font-montserrat);
+    transition: height 0.3s ease-in-out;
+}
+
+.WSInsightAnalytics_WSInsightAnalytics.minimized {
+    height: 1750px; /* Adjust this value as needed */
+}
+
+.filter-section {
+  padding: 20px;
+  margin-bottom: 20px;
+   }
+   
+   .filter-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+   }
+   
+   .filter-group {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+   }
+   
+   .filter-icon {
+  margin-right: 8px;
+   }
+   
+   .filter-select {
+  border: none;
+  outline: none;
+  padding: 4px;
+  min-width: 120px;
+   }
+   
+   .download-btn {
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+   }
+   
+   .download-btn:hover {
+  background: #f5f5f5;
+   }
+   
+.dropdown-container {
+  position: absolute;
+  left: 550px;
+  top: 400px;
+  width: 282.5px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.70);
+  border-radius: 10px;
+  padding: 15px;
+  }
+  
+  .dropdown-list {
+  width: calc(100% - 30px);
+  max-height: 200px;
+  overflow-y: auto;
+  }
+
+.dropdown-container {
+  position: relative;
+  left: 550px;
+  top: 400px;
+  width: 282.5px;
+  background: rgba(255, 255, 255, 0.70);
+  border-radius: 10px;
+  padding: 15px;
+  }
+  
+  .dropdown-label {
+  font-size: 22px;
+  font-weight: 600;
+  color: #8a252c;
+  margin-bottom: 10px;
+  display: block;
+  }
+  
+  .dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  }
+  
+  .dropdown-arrow {
+  color: #8a252c;
+  font-size: 12px;
+  }
+  
+  .dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  }
+  
+  .dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  }
+  
+  .dropdown-item:hover {
+  background: rgba(254, 176, 16, 0.1);
+  }
+
+.OfficeContainer {
+    position: relative;
+    display: inline-block;
+}
+
+.OfficeSelection {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url('data:image/svg+xml;utf8,<svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L6 5L11 1" stroke="%238A252C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>') 
+        no-repeat right 10px center;
+    background-color: white;
+    width: 100%;
+    padding: 8px 35px 8px 10px;
+    border: 1px solid #8a252c;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #8a252c;
+    cursor: pointer;
+}
+
+.OfficeSelection:focus {
+    outline: none;
+    border-color: #FEB010;
+    box-shadow: 0 0 0 2px rgba(254, 176, 16, 0.2);
+}
+
+.OfficeContainer {
+    position: absolute;
+    left: 550px;
+    top: 455px;
+    width: 282.5px;
+    height: 90px;
+    background: rgba(255, 255, 255, 0.70);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.OfficeLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #8a252c;
+}
+
+/* Hide default arrow in IE */
+.OfficeSelection::-ms-expand {
+    display: none;
+}
+
+/* Hover state */
+.OfficeSelection:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Options styling */
+.OfficeSelection option {
+    background: white;
+    color: #8a252c;
+    padding: 8px;
+}
+
+.WSInsightAnalytics_WSInsightAnalytics.expanded {
+    height: 2340px;
+}
+
+.FeedbackSection {
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.FeedbackSection.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.FeedbackSection.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.ReportFeedbackContainer {
+	display: flex; /* This makes elements inside align in one line */
+	align-items: center; /* Vertically aligns items in the middle */
+	justify-content: space-between; /* Optional: Adjust spacing between elements */
+	transition: top 0.3s ease-in-out;
+	}
+	
+	.minimized .ReportFeedbackContainer {
+	top: 1700px; /* Adjust this value as needed */
+	}
+	
+	.expanded .ReportFeedbackContainer {
+	top: 1736px;
+	}
+	
+	/* If you want to ensure text does not wrap */
+	.ReportFeedbackContainer span {
+	white-space: nowrap; /* Prevents the text from wrapping onto a new line */
+	}
+	
+  .InsightTitle {
+	  position: absolute;
+	  top: 71px;
+	  left: 660px;
+	  width: 276px;
+	  height: 231px;
+	  object-fit: cover;
+  }
+  
+  .AnalyticsTitle {
+	  position: absolute;
+	  display: inline-block;
+	  top: 345px;
+	  left: 230px;
+	  font-size: 24px;
+	  width: 600px;
+	  height: 40px;
+  }
+  
+  .WSInsightBox {
+	  position: absolute;
+	  top: 420px;
+	  left: 180px;
+	  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+	  border-radius: 20px;
+	  background-color: rgba(255, 255, 255, 0.4);
+	  width: 1100px;
+	  height: 1230px;
+  }
+
+  .WSInsightBox2 {
+    position: absolute;
+    top: 1800px;
+    left: 180px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.4); /* Adjusted for visibility */
+    width: 1100px;
+    height: 500px;
+}
+  
+  
+  /* Year Section Styling */
+  .YearContainer {
+	  position: absolute;
+	  left: 244px;
+	  top: 455px;
+	  width: 282.5px;
+	  height: 90px;
+	  background: rgba(255, 255, 255, 0.70);
+	  border-radius: 10px;
+	  padding: 15px;
+	  display: flex;
+	  align-items: center;
+  }
+  
+  .YearBox {
+	  font-size: 18px;
+	  font-weight: 600;
+	  color: #8a252c;
+	  display: flex;
+	  align-items: center;
+  }
+  
+  .arrow_left, .arrow_right {
+	  cursor: pointer;
+  }
+  
+  .arrow_left:hover, .arrow_right:hover {
+	  transform: scale(1.2);
+  }
+  
+  /* Office Section Styling */
+  .OfficeContainer {
+	  position: absolute;
+	  left: 550px; /* Positioned separately from YearContainer */
+	  top: 455px;
+	  width: 282.5px;
+	  height: 90px;
+	  background: rgba(255, 255, 255, 0.70);
+	  border-radius: 10px;
+	  padding: 15px;
+	  display: flex;
+	  align-items: center;
+  }
+  
+  .OfficeLabel {
+	position: absolute;
+	left: 19px;
+	top: 9px;
+	width: 50;
+	height: 23px;
+	font-size: 22px;
+	font-weight: 600;
+	line-height: 27px;
+  }
+  
+  .OfficeSelection {
+	  display: flex;
+	  align-items: center;
+  }
+  
+  .OfficeIcon {
+	  width: 30px;
+	  height: 30px;
+	  margin-right: 10px;
+  }
+  
+  .OfficeName {
+	  font-size: 18px;
+	  color: #8a252c;
+  }
+  
+  .YearBox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 282.5px;
+	height: 90px;
+	background: rgba(255,255,255,0.70);
+	border-radius: 10px;
+  }
+  .Year {
+	position: absolute;
+	left: 19px;
+	top: 9px;
+	width: 50;
+	height: 23px;
+	font-size: 22px;
+	font-weight: 600;
+	line-height: 27px;
+  }
+  .Calendar {
+	position: absolute;
+	left: 19px;
+	top: 42px;
+	width: 36px;
+	height: 33px;
+  }
+  .arrow_left  {
+	position: absolute;
+	left: 70px;
+	top: 45px;
+	width: 35px;
+	height: 30px;
+  }
+  
+  .arrow_left:hover{
+	transform: scale(1.3);
+  }
+  
+  ._2024 {
+	position: absolute;
+	left: 105px;
+	top: 46px;
+	width: 56px;
+	height: 25px;
+	font-size: 22px;
+	font-weight: 600;
+	line-height: 27px;
+  }
+  .arrow_right  {
+	position: absolute;
+	left: 160px;
+	top: 45px;
+	width: 35px;
+	height: 30px;
+  } 
+  
+  .arrow_right:hover {
+	transform: scale(1.3);
+  }
+  
+  .BarGraphContainer {
+	position: absolute;
+	left: 244px;
+	top: 584px;
+	width: 961px;
+	height: 523px;
+  }
+  .BarBox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 961px;
+	height: 523px;
+	background: rgba(255,255,255,0.65);
+	border-radius: 15px;
+  }
+  .MonthlyAccidentEventStats {
+	position: absolute;
+	right: 244px;
+	top: 40px;
+	width: 367px;
+	height: 25px;
+	font-size: 21px;
+	font-weight: 600;
+  }
+  
+  .BarGraph {
+	position: absolute;
+	left: 45px;
+	top: 94px;
+	width: 917px;
+	height: 402px;
+  }
+  
+  .grayline {
+	position: absolute;
+	left: 28px;
+	top: 284px;
+	width: 800px;
+	height: 10px;
+	background: rgba(217,217,217,1.00);
+	border-radius: 7px;
+  }
+
+  .PAContainer {
+	position: absolute;
+	left: 42px;
+	top: 315px;
+	width: 125px;
+	height: 14px;
+  }
+  .PhysicalAccident {
+	position: absolute;
+	left: 19px;
+	top: 0px;
+	width: 106px;
+	height: 14px;
+	display: flex;
+	align-items: center;
+	font-size: 10px;
+	font-weight: 700;
+  } 
+  .PABox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 14px;
+	height: 14px;
+	background: rgba(249,65,68,1.00);
+	border-radius: 4px;
+  }
+  
+  .EAContainer {
+	position: absolute;
+	left: 263px;
+	top: 316px;
+	width: 155px;
+	height: 14px;
+  }
+  .EnvironmentalAccident {
+	position: absolute;
+	left: 19px;
+	top: 0px;
+	width: 135px;
+	height: 14px;
+	display: flex;
+	align-items: center;
+	font-size: 10px;
+	font-weight: 700;
+  }
+  .EABox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 14px;
+	height: 14px;
+	background: rgba(249,132,74,0.78);
+	border-radius: 4px;
+  }
+  
+  .VAContainer {
+	position: absolute;
+	left: 513px;
+	top: 316px;
+	width: 125px;
+	height: 14px;
+  }
+  .VehicleAccident {
+	position: absolute;
+	left: 19px;
+	top: 0px;
+	width: 106px;
+	height: 14px;
+	display: flex;
+	align-items: center;
+	font-size: 10px;
+	font-weight: 700;
+  }
+  .VABox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 14px;
+	height: 14px;
+	background: rgba(67,170,139,1.00);
+	border-radius: 4px;
+  }
+  
+  .LAContainer {
+	position: absolute;
+	left: 42px;
+	top: 351px;
+	width: 128px;
+	height: 14px;
+  }
+  .LaboratoryAccident {
+	position: absolute;
+	left: 19px;
+	top: 0px;
+	width: 109px;
+	height: 14px;
+	display: flex;
+	align-items: center;
+	font-size: 10px;
+	font-weight: 700;
+  }
+  .LABox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 14px;
+	height: 14px;
+	background: rgba(243,114,44,1.00);
+	border-radius: 4px;
+  }
+  
+  .FireRelatedContainer {
+	position: absolute;
+	left: 263px;
+	top: 351px;
+	width: 136px;
+	height: 14px;
+  }
+  .FireRelatedAccident {
+	position: absolute;
+	left: 19px;
+	top: 0px;
+	width: 116px;
+	height: 14px;
+	display: flex;
+	align-items: center;
+	font-size: 10px;
+	font-weight: 700;
+  }
+  .FireRelatedBox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 14px;
+	height: 14px;
+	background: rgba(249,199,79,1.00);
+	border-radius: 4px;
+  }
+  
+  .EquipmentRelatedContainer {
+	position: absolute;
+	left: 513px;
+	top: 351px;
+	width: 178px;
+	height: 14px;
+  }
+  .EquipmentRelatedAccident {
+	position: absolute;
+	left: 19px;
+	top: 0px;
+	width: 159px;
+	height: 14px;
+	display: flex;
+	align-items: center;
+	font-size: 10px;
+	font-weight: 700;
+  }
+  .EquipmentRelatedBox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 14px;
+	height: 14px;
+	background: rgba(77,144,142,1.00);
+	border-radius: 4px;
+  }
+  
+  .FacilityRelatedContainer {
+	position: absolute;
+	left: 42px;
+	top: 387px;
+	width: 153px;
+	height: 14px;
+  }
+  .FacilityRelatedAccident {
+	position: absolute;
+	left: 18px;
+	top: 0px;
+	width: 135px;
+	height: 14px;
+	display: flex;
+	align-items: center;
+	font-size: 10px;
+	font-weight: 700;
+  }
+  .FacilityRelatedBox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 14px;
+	height: 14px;
+	background: rgba(248,150,30,1.00);
+	border-radius: 4px;
+  }
+  
+  .HRContainer {
+	position: absolute;
+	left: 263px;
+	top: 387px;
+	width: 152px;
+	height: 14px;
+  }
+   .HealthRelatedAccident {
+	position: absolute;
+	left: 19px;
+	top: 0px;
+	width: 133px;
+	height: 14px;
+	display: flex;
+	align-items: center;
+	font-size: 10px;
+	font-weight: 700;
+  }
+  .HRBox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 14px;
+	height: 14px;
+	background: rgba(144,190,109,1.00);
+	border-radius: 4px;
+  }
+  
+  .EventContainer {
+	position: absolute;
+	left: 513px;
+	top: 387px;
+	width: 55px;
+	height: 14px;
+  }
+  .Event {
+	position: absolute;
+	left: 19px;
+	top: 0px;
+	width: 36px;
+	height: 14px;
+	display: flex;
+	align-items: center;
+	font-size: 10px;
+	font-weight: 700;
+  }
+  .EventBox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 14px;
+	height: 14px;
+	background: rgba(43,93,138,1.00);
+	border-radius: 4px;
+  }
+
+  .PieChartContainer {
+	position: absolute;
+	left: 244px;
+	top: 1161px;
+	width: 961px;
+	height: 441px;
+  }
+  .PieBackground {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 961px;
+	height: 441px;
+	background: rgba(255,255,255,0.65);
+	border-radius: 13px;
+  }
+  .PieContainer {
+	position: absolute;
+	left: 325px;
+	top: 38px;
+	width: 325px;
+	height: 362px;
+  }
+  .PieGroup {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 325px;
+	height: 362px;
+  }
+  .ApprovedDeniedReports {
+	position: absolute;
+	left: 10px;
+	bottom: 370px;
+	width: 325px;
+	height: 25.99px;
+	font-size: 22px;
+	font-weight: 600;
+  }
+  
+  .Approved {
+	margin-top: 10px;
+	position: absolute;
+	left: 74px;
+	top: 338px;
+	width: 72px;
+	height: 15px;
+	display: flex;
+	align-items: center;
+	font-size: 13px;
+	font-weight: 700;
+  }
+  
+  .ApprovedBox {
+	margin-top: 10px;
+	position: absolute;
+	left: 27px;
+	top: 329px;
+	width: 33px;
+	height: 32px;
+	background: rgba(254,176,16,1.00);
+	border-radius: 6px;
+  }
+  
+  .Denied {
+	margin-top: 10px;
+	position: absolute;
+	left: 238px;
+	top: 338px;
+	width: 54px;
+	height: 15px;
+	display: flex;
+	align-items: center;
+	font-size: 13px;
+	font-weight: 700;
+  }
+  
+  .DeniedBox {
+	margin-top: 10px;
+	position: absolute;
+	left: 186px;
+	top: 329px;
+	width: 33px;
+	height: 32px;
+	background: rgba(138,37,44,1.00);
+	border-radius: 6px;
+  }
+  
+  .Abg {
+	position: absolute;
+	left: 37px;
+	top: 218px;
+	width: 46px;
+	height: 29px;
+	background: rgba(245,245,245,0.83);
+	border-radius: 6px;
+  }
+  .ApprovedPercentage {
+	position: absolute;
+	left: 46px;
+	top: 223px;
+	width: 30px;
+	height: 18px;
+	color: #FEB010; 
+	font-size: 1.2rem;
+	margin-top: 8px; 
+	font-size: 13px;
+	font-weight: 700;
+  }
+  
+  .Dbg {
+	position: absolute;
+	left: 221px;
+	top: 92px;
+	width: 46px;
+	height: 29px;
+	background: rgba(245,245,245,0.83);
+	border-radius: 6px;
+  }
+  .DeniedPercentage {
+	position: absolute;
+	left: 230px;
+	top: 50px;
+	left: 50px;
+	width: 30px;
+	height: 18px;
+	color: #8A252C;
+	font-size: 1.2rem; 
+	margin-top: 8px; 
+	font-size: 13px;
+	font-weight: 700;
+  }
+  
+   
+  
+  .WSInsightBox2 {
+	  position: absolute;
+	  top: 1800px;
+	  left: 180px;
+	  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+	  border-radius: 20px;
+	  background-color: rgba(255, 255, 255, 0.4);
+	  width: 1100px;
+	  height: 500px;
+  }
+  
+  .ReportFeedbackContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    left: 146px;
+    top: 1736px; /* Adjust as needed */
+    width: 236px;
+    height: 36px;
+}
+  .ReportFeedback {
+	position: absolute;
+	right: 0px;
+	top: 4px;
+	width: 200px;
+	height: 25px;
+	font-size: 22px;
+	font-weight: 500;
+  }
+  .Toggle {
+	position: absolute;
+	left: -7px;
+	top: 9px;
+	width: 26px;
+	height: 23px;
+  }
+  
+  
+  .TableContainer {
+	position: absolute;
+	left: 125px;
+	top: 1832px;
+	width: 1195px;
+	height: 400px;
+  }
+  
+  
+  .TOTALREPORTSSUBMITTED {
+	position: absolute;
+	right: 760px;
+	top: 90px;
+	width: 303px;
+	height: 23px;
+	font-size: 19px;
+	font-weight: 500;
+  }
+  .Total1 {
+	position: absolute;
+	right: 907px;
+	top: 140px;
+	width: 60px;
+	height: 50px;
+	background: rgba(138,37,44,1.00);
+	border-radius: 60%;
+  }
+  .TotalNumber1 {
+	position: absolute;
+	right: 919px;
+	top: 148px;
+	width: 38px;
+	height: 24px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 24px;
+	font-weight: 600;
+  }
+  
+  
+  .center-text {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	}
+	
+  
+  .TOTALPOINTSEARNED {
+	position: absolute;
+	right: 110px;
+	top: 90px;
+	width: 249px;
+	height: 23px;
+	font-size: 19px;
+	font-weight: 500;
+  }
+  .Total2 {
+	position: absolute;
+	right: 216px;
+	top: 140px;
+	width: 60px;
+	height: 50px;
+	background: rgba(138,37,44,1.00);
+	border-radius: 60%;
+  }
+  .TotalNumber2 {
+	position: absolute;
+	right: 227px;
+	top: 148px;
+	width: 38px;
+	height: 24px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 24px;
+	font-weight: 600;
+  }
+
+  .GroupTable {
+	position: absolute;
+	left: 94px;
+	top: 240px;
+	width: 1005px;
+	height: 186px;
+  }
+  .Table {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 1004px;
+	height: 186px;
+  }
+  ._1 {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 200px;
+	height: 62px;
+	background: rgba(138,37,44,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  .SubmissionDate {
+	position: absolute;
+	left: 9px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 700;
+  }
+  
+  ._2_1 {
+	position: absolute;
+	left: 200px;
+	top: 0px;
+	width: 200px;
+	height: 62px;
+	background: rgba(138,37,44,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  .DateVerified {
+	position: absolute;
+	left: 9px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 700;
+  }
+  
+   ._3 {
+	position: absolute;
+	left: 401px;
+	top: 0px;
+	width: 200px;
+	height: 62px;
+	background: rgba(138,37,44,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+   .Status {
+	position: absolute;
+	left: 9px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 700;
+  }
+  
+  ._4 {
+	position: absolute;
+	left: 602px;
+	top: 0px;
+	width: 200px;
+	height: 61px;
+	background: rgba(138,37,44,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  .Reason {
+	position: absolute;
+	left: 8px;
+	top: 12px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 700;
+  }
+  
+  ._6 {
+	position: absolute;
+	left: 0px;
+	top: 62px;
+	width: 200px;
+	height: 62px;
+	background: rgba(255,254,233,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  ._20240116 {
+	position: absolute;
+	left: 9px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 400;
+  }
+  
+  ._7 {
+	position: absolute;
+	left: 200px;
+	top: 62px;
+	width: 200px;
+	height: 62px;
+	background: rgba(255,254,233,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  ._20240116_1 {
+	position: absolute;
+	left: 9px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 400;
+  }
+  
+  ._8 {
+	position: absolute;
+	left: 401px;
+	top: 62px;
+	width: 200px;
+	height: 62px;
+	background: rgba(255,254,233,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  .Approved_1 {
+	position: absolute;
+	left: 9px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 400;
+  }
+
+  ._9 {
+	position: absolute;
+	left: 602px;
+	top: 62px;
+	width: 200px;
+	height: 62px;
+	background: rgba(255,254,233,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  ._11 {
+	position: absolute;
+	left: 0px;
+	top: 124px;
+	width: 200px;
+	height: 62px;
+	background: rgba(255,254,233,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  ._20240116_2 {
+	position: absolute;
+	left: 9px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 400;
+  }
+   
+  ._12 {
+	position: absolute;
+	left: 200px;
+	top: 124px;
+	width: 200px;
+	height: 62px;
+	background: rgba(255,254,233,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  ._20240116_3 {
+	position: absolute;
+	left: 9px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 400;
+  }
+  
+  ._13 {
+	position: absolute;
+	left: 401px;
+	top: 124px;
+	width: 200px;
+	height: 62px;
+	background: rgba(255,254,233,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  .Denied_1 {
+	position: absolute;
+	left: 9px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 400;
+  }
+  
+  ._14 {
+	position: absolute;
+	left: 602px;
+	top: 124px;
+	width: 200px;
+	height: 62px;
+	background: rgba(255,254,233,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  .Fakenews {
+	position: absolute;
+	left: 8px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 400;
+  }
+  
+  ._15 {
+	position: absolute;
+	left: 803px;
+	top: 0px;
+	width: 200px;
+	height: 61px;
+	background: rgba(138,37,44,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  .PointsEarned {
+	position: absolute;
+	left: 8px;
+	top: 12px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 700;
+  }
+   
+  ._16 {
+	position: absolute;
+	left: 803px;
+	top: 62px;
+	width: 200px;
+	height: 62px;
+	background: rgba(255,254,233,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  ._5_1 {
+	position: absolute;
+	left: 8px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 400;
+  }
+  
+  ._17 {
+	position: absolute;
+	left: 803px;
+	top: 124px;
+	width: 200px;
+	height: 62px;
+	background: rgba(255,254,233,1.00);
+	border: 1px solid rgba(0,0,0,1);
+  }
+  ._0 {
+	position: absolute;
+	left: 8px;
+	top: 13px;
+	width: 181px;
+	height: 36px;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	color: rgba(246,195,1,1.00);
+	font-size: 16px;
+	font-weight: 400;
+  }
+  
+  
+  /* Mobile Responsive Styles */
+  @media screen and (max-width: 768px) {
+	  .WSInsightAnalytics_WSInsightAnalytics {
+		  height: 400vh!important;
+	  }
+  
+	  .InsightTitle {
+		  top: 4%!important;
+		  left: 38%!important;
+		  width: 200px!important;
+		  height: 180px!important;
+	  }
+  
+	  .AnalyticsTitle {
+		  top: 250px!important;
+		  left: 8%!important;
+		  font-size: 20px!important;
+		  width: 90%!important;
+	  }
+  
+	  .WSInsightBox {
+		  top: 300px;
+		  left: 5%;
+		  width: 90%;
+		  height: 45%;
+	  }
+  
+	  .YearContainer {
+	  top: 13%;
+		  left: 10%;
+		  width: 40%;
+	  height: 5%;
+	  }
+	.YearBox{
+	  width: 70%;
+	}
+  
+	  .BarGraphContainer {
+		  left: 10%;
+		  width: 90%;
+		  top: 400px;
+	  }
+	
+  
+	  .BarBox {
+	  top: 10%;
+		  width: 90%;
+		  height: 90%;
+	  }
+	.MonthlyAccidentEventStats {
+	  top: 15%;
+	  left: 28%;
+	  font-size: 18px;
+	}
+  
+	.grayline {
+	  left: 4%;
+	  width: 530px;
+	}
+
+	.PAContainer, .LAContainer, .FacilityRelatedContainer {
+		left: 4%;
+	  }
+	  .EAContainer, .FireRelatedContainer, .HRContainer {
+		left: 38%;
+	  }
+	  .VAContainer, .EquipmentRelatedContainer, .EventContainer {
+		left: 70%;
+	  }
+	
+		.PhysicalAccident, .EnvironmentalAccident, .VehicleAccident, .LaboratoryAccident, 
+		.FireRelatedAccident, .EquipmentRelatedAccident, .FacilityRelatedAccident, 
+		.HealthRelatedAccident, .Event {
+			font-size: 10px;
+		}
+	
+	  .PieChartContainer {
+		left: 10%;
+		top: 38%;
+	  }
+	  .PieBackground {
+		width: 65%;
+	  }
+	  .PieContainer {
+		left: 10%;
+	  }
+	  .ApprovedDeniedReports {
+		left: 7%;
+		top: -20%;
+		font-size: 18px;
+	  }
+	  .PieGroup {
+		left: 27%;
+		top: 10%;
+		height: 73%;
+	  }
+	  .ApprovedPercentage{
+		left: 55%;
+		top: 73%;
+	  }
+	  .ApprovedBox {
+		top: 105%;
+	  }
+	  .DeniedPercentage {
+		top: 10%;
+	  }
+	  .Approved {
+		top: 108%;
+		font-size: 15px;
+	  }
+	  .DeniedBox {
+		top: 105%;
+	  }
+	  .Denied {
+		top: 108%;
+		font-size: 15px;
+	  }
+	
+	  .Toggle{
+		left: -40%;
+		top: -500%;
+	  }
+	  .ReportFeedback {
+		left: -20%;
+		top: -510%;
+	  }
+	
+	  .WSInsightBox2 {
+		left: 5%;
+		top: 63%;
+		width: 90%;
+		height: 15%;
+	  }
+	  .TableContainer {
+		top: 63%;
+		left: -5%;
+	  }
+	  .TOTALREPORTSSUBMITTED {
+		top: 20%;
+		font-size: 15px;
+	  }
+	  .Total1 {
+		top: 29%;
+		left: 17%;
+		height: 10%;
+		width: 4%;
+	  }
+	  .TotalNumber1 {
+		top: 30%;
+		left: 17.5%;
+		font-size: 23px;
+	  }
+	  .TOTALPOINTSEARNED {
+		left: 44%;
+		top: 20%;
+		font-size: 15px;
+	  }
+	  .Total2 {
+		top: 29%;
+		left: 48%;
+		height: 10%;
+		width: 4%;
+		font-size: 23px;
+	  }
+	  .TotalNumber2 {
+		top: 30%;
+		left: 48.5%;
+	  }
+	  
+	
+	  ._1 {
+		top: -23%;
+		left: 2%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  .SubmissionDate {
+		top: 5%;
+		left: -22%;
+		font-size: 10px;
+	  }
+	  ._6 {
+		top: -1.5%;
+		left: 2%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  ._20240116 {
+		top: 5%;
+		left: -22%;
+		font-size: 13px;
+	  }
+	  ._11 {
+		top: 19.9%;
+		left: 2%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  ._20240116_2 {
+		top: 5%;
+		left: -22%;
+		font-size: 13px;
+	  }
+	
+	
+	  ._2_1 {
+		top: -23%;
+		left: 14.5%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  .DateVerified {
+		top: 5%;
+		left: -22%;
+		font-size: 10px;
+	  }
+	  ._7 {
+		top: -1.5%;
+		left: 14.5%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  ._20240116_1 {
+		top: 5%;
+		left: -22%;
+		font-size: 11px;
+	  }
+	  ._12 {
+		top: 19.9%;
+		left: 14.5%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  ._20240116_3 {
+		top: 5%;
+		left: -22%;
+		font-size: 11px;
+	  }
+	
+	
+	  ._3{
+		top: -23%;
+		left: 27%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  .Status {
+		top: 5%;
+		left: -22%;
+		font-size: 10px;
+	  }
+	  ._8 {
+		top: -1.5%;
+		left: 27%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  .Approved_1 {
+		top: 5%;
+		left: -22%;
+		font-size: 13px;
+	  }
+	  ._13 {
+		top: 19.9%;
+		left: 27%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  .Denied_1 {
+		top: 5%;
+		left: -22%;
+		font-size: 13px;
+	  }
+	
+	
+	  ._4{
+		top: -23%;
+		left: 39.6%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  .Reason {
+		top: 5%;
+		left: -22%;
+		font-size: 10px;
+	  }
+	  ._9 {
+		top: -1.5%;
+		left: 39.6%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  ._14 {
+		top: 19.9%;
+		left: 39.6%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  .Fakenews {
+		top: 5%;
+		left: -22%;
+		font-size: 13px;
+	  }
+	
+	
+	  ._15{
+		top: -23%;
+		left: 51.9%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  .PointsEarned {
+		top: 5%;
+		left: -22%;
+		font-size: 10px;
+	  }
+	  ._16 {
+		top: -1.5%;
+		left: 51.9%;
+		width: 12.5%;
+		height: 21%;
+	  }
+	  ._17 {
+		top: 19.9%;
+		left: 51.9%;
+		width: 12.5%;
+		height: 21%;
+	  }  
+	}
+	
+	
+	
+	/* Smaller screen styles (500px width) */
+	@media screen and (max-width: 500px) {
+	  .WSInsightAnalytics_WSInsightAnalytics {
+			height: 300vh!important; 
+		}
+	
+		.InsightTitle {
+			top: 4%!important;
+			left: 35%!important;
+			width: 160px!important;
+			height: 140px!important; 
+		}
+
+		.AnalyticsTitle {
+			top: 210px!important; 
+			left: 7%!important;
+			font-size: 16px; 
+			width: 85%;
+		}
+	
+		.WSInsightBox {
+			top: 240px;  
+			left: 5%;
+			width: 90%;
+			height: 54%; 
+		}
+	
+		.YearContainer {
+			top: 13%!important;
+			left: 8%!important;
+			width: 38%!important;
+			height: 4%!important; 
+		}
+	
+		.YearBox {
+			width: 120%!important;
+		}
+	
+		.BarGraphContainer {
+			left: 8%;
+			width: 85%;
+			top: 320px; 
+		}
+		.BarBox {
+			top: 8%;
+			width: 99%;
+			height: 93%; 
+		}
+	
+		.MonthlyAccidentEventStats {
+			top: 12%;
+			left: 26%;
+			font-size: 14px; 
+		}
+	
+		.grayline {
+			left: 3.5%;
+			width: 340px; 
+		}
+	  
+	
+		.PAContainer, .LAContainer, .FacilityRelatedContainer {
+			left: -5%;
+		}
+	
+		.EAContainer, .FireRelatedContainer, .HRContainer {
+			left: 32%;
+		}
+	
+		.VAContainer, .EquipmentRelatedContainer, .EventContainer {
+			left: 67%;
+		}
+	
+		.PhysicalAccident, .EnvironmentalAccident, .VehicleAccident, 
+		.LaboratoryAccident, .FireRelatedAccident, .EquipmentRelatedAccident, 
+		.FacilityRelatedAccident, .HealthRelatedAccident, .Event {
+			font-size: 7.5px;
+		}
+	
+		.PieChartContainer {
+			left: 8%;
+			top: 46%; 
+		}
+	
+		.PieBackground {
+		height: 83%;
+			width: 43.5%;
+		}
+	
+		.PieContainer {
+			left: 4%;
+		}
+	
+		.ApprovedDeniedReports {
+			left: 2%;
+			top: -18%;
+			font-size: 16px; 
+		}
+	
+		.PieGroup {
+			left: 22%;
+			top: 8%;
+			height: 65%!important; 
+		}
+	
+		.ApprovedPercentage {
+			left: 50%;
+			top: 70%;
+		}
+	
+		.ApprovedBox {
+		left: -2%;
+			top: 100%;
+		}
+	
+		.DeniedPercentage {
+			top: 8%;
+		}
+	
+		.Approved {
+		left: 11%;
+			top: 103%!important;
+			font-size: 13px!important; 
+		}
+	
+		.DeniedBox {
+		left: 45%;
+			top: 100%!important;
+		}
+	
+		.Denied {
+		left: 58%;
+			top: 103%!important;
+			font-size: 13px!important; 
+		}
+	
+		.Toggle {
+			left: -50%!important;
+			top: -980%!important;
+		}
+	
+		.ReportFeedback {
+			left: -33%!important;
+			top: -990%!important;
+		}
+	
+		.WSInsightBox2 {
+			left: 5%!important;
+		top: 75%;
+			width: 90%!important;
+			height: 16%!important; 
+		}
+	
+		.TableContainer {
+			top: 73%!important; 
+			left: -15%;
+		}
+	
+		.TOTALREPORTSSUBMITTED {
+			top: 18%!important; 
+			font-size: 13px!important; 
+		}
+	
+		.Total1 {
+			top: 26%!important; 
+			left: 16%!important;
+			height: 8%!important; 
+			width: 3.5%!important; 
+		}
+	
+		.TotalNumber1 {
+			top: 26.3%!important; 
+			left: 16.2%!important;
+			font-size: 18px!important; 
+		}
+	
+		.TOTALPOINTSEARNED {
+			left: 32%!important;
+			top: 18%!important;
+			font-size: 13px!important; 
+		}
+	
+		.Total2 {
+			top: 26%!important; 
+			left: 37%!important;
+			height: 8%!important; 
+			width: 3.5%!important; 
+		}
+	
+		.TotalNumber2 {
+			top: 27%!important; 
+			left: 37.2%!important;
+		font-size: 18px!important; 
+		}
+	
+	
+		._1 {
+			top: -21%!important;
+			left: 3.7%!important;
+			width: 7.5%!important;
+			height: 20%!important; 
+		}
+		.SubmissionDate {
+			top: 5%!important;
+			left: -69%!important;
+			font-size: 7.5px!important; 
+		}
+		._6 {
+			top: -1.3%!important;
+			left: 3.7%!important;
+			width: 7.5%!important;
+			height: 20%!important; 
+		}
+		._20240116 {
+			top: 5%!important;
+			left: -69%!important;
+			font-size: 9px!important; 
+		}
+		._11 {
+			top: 19.5%!important;
+			left: 3.7%!important;
+			width: 7.5%!important;
+			height: 20%!important; 
+		}
+		._20240116_2 {
+			top: 5%!important;
+			left: -69%!important;
+			font-size: 9px!important; 
+		}
+
+		._2_1 {
+			top: -21%!important;
+			left: 11.3%!important;
+			width: 8.5%!important;
+			height: 20%!important; 
+		}
+		.DateVerified {
+			top: 5%!important;
+			left: -55%!important;
+			font-size: 9px!important; 
+		}
+		._7 {
+			top: -1.3%!important;
+			left: 11.3%!important;
+			width: 8.5%!important;
+			height: 20%!important; 
+		}
+		._20240116_1 {
+			top: 5%!important;
+			left: -55%!important;
+			font-size: 7.5px!important; 
+		}
+		._12 {
+			top: 19.5%!important;
+			left: 11.3%!important;
+			width: 8.5%!important;
+			height: 20%!important; 
+		}
+		._20240116_3 {
+			top: 5%!important;
+			left: -55%!important;
+			font-size: 7.5px!important; 
+		}
+	
+	
+		._3 {
+			top: -21%!important;
+			left: 19.9%!important;
+			width: 7.5%!important;
+			height: 20%!important;
+		}
+		.Status {
+			top: 5%!important;
+			left: -69%!important;
+			font-size: 9px!important;
+		}
+		._8 {
+			top: -1.3%!important;
+			left: 19.9%!important;
+			width: 7.5%!important;
+			height: 20%!important;
+		}
+		.Approved_1 {
+			top: 5%!important;
+			left: -69%!important;
+			font-size: 8px!important;
+		}
+		._13 {
+			top: 19.5%!important;
+			left: 19.9%!important;
+			width: 7.5%!important;
+			height: 20%!important;
+		}
+		.Denied_1 {
+			top: 5%!important;
+			left: -69%!important;
+			font-size: 8px!important;
+		}
+	
+	
+		._4 {
+			top: -21%!important;
+			left: 27.5%!important;
+			width: 7.5%!important;
+			height: 20%!important;
+		}
+		.Reason {
+			top: 5%!important;
+			left: -69%!important;
+			font-size: 9px!important;
+		}
+		._9 {
+			top: -1.3%!important;
+			left: 27.5%!important;
+			width: 7.5%!important;
+			height: 20%!important;
+		}
+		._14 {
+			top: 19.5%!important;
+			left: 27.5%!important;
+			width: 7.5%!important;
+			height: 20%!important;
+		}
+		.Fakenews {
+			top: 5%!important;
+			left: -69%!important;
+			font-size: 9px!important;
+		}
+
+		._15 {
+			top: -21%!important;
+			left: 35%!important;
+			width: 7.5%!important;
+			height: 20%!important;
+		}
+		.PointsEarned {
+			top: 5%!important;
+			left: -69%!important;
+			font-size: 9px!important;
+		}
+		._16 {
+			top: -1.3%!important;
+			left: 35%!important;
+			width: 7.5%!important;
+			height: 20%!important;
+		font-size: 14px;
+		}
+		._17 {
+			top: 19.5%!important;
+			left: 35%!important;
+			width: 7.5%!important;
+			height: 20%!important;
+		font-size: 14px;
+		}
+	}
+	
+.filter-section {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 20px;
+}
+	
+.dropdown-container {
+    position: absolute;
+    left: 895px;
+    top: 430px; /* Adjusted position */
+    width: 282.5px;
+    height: 90px;
+    background: rgba(255, 255, 255, 0.70); /* Background styling */
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.dropdown {
+	display: flex;
+	flex-direction: column;
+}
+
+.dropdown-label {
+	margin-bottom: 5px;
+	color: #8a252c;
+	font-weight: bold;
+	}
+	
+.dropdown-select {
+	padding: 5px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	font-size: 16px;
+	color: #8a252c;
+	background-color: #fff;
+}
+	
+.TableContainer {
+	margin-top: 20px;
+}
+
+.Table {
+	width: 100%;
+	border-collapse: collapse;
+	}
+	
+.Table th, .Table td {
+	border: 1px solid #ccc;
+	padding: 8px;
+	text-align: left;
+}
+
+.Table th {
+	background-color: #8a252c;
+	color: #fff;
+}
+	
+.Table td {
+	background-color: #f5f5f5;
+	color: #8a252c;
+}
+	
+.GroupTable {
+	overflow-x: auto; /* To handle table overflow */
+}

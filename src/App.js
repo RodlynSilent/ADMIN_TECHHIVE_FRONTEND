@@ -40,7 +40,37 @@ const App = () => {
         <Route path="/sudirectory" element={<SUDirectory />} />
         <Route path="/suleaderboard" element={<SULeaderboard />} />
         <Route path="/suprofile" element={<SUProfile />} />
+<<<<<<< Updated upstream
        </Routes>
+=======
+        <Route path="/loadingbar2" element={<LoadingBar2 />} />
+        <Route path="/wslandingpage" element={<WSLandingPage />} />
+        <Route path="/wscontactus" element={<ContactUs />} />
+        <Route path="/wsaboutus" element={<WSAboutUs />} />
+        <Route path="/wsaboutus2" element={<WSAboutUs2 />} />
+        <Route path="/wsaboutus3" element={<WSAboutUs3 />} />
+        <Route path="/wsaboutus4" element={<WSAboutUs4 />} />
+        <Route path="/wsaboutus5" element={<WSAboutUs5 />} />
+        <Route path="/wssignupsignin" element={<SignUpSignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/successfullyregistered" element={<SuccessfullyRegistered />} />
+        <Route path="/wshomepage" element={<WSHomepage />} />
+        <Route path="/wscomment" element={<WSComment />} />
+        <Route path="/wsreport" element={<WSReport />} />
+        <Route path="/popupreport" element={<PopUpReport />} />
+        <Route path="/popupfinal" element={<PopUpReportFinal />} />
+        <Route path="/popuppermission" element={<PopUpPermission />} />
+        <Route path="/popuppermissionloc" element={<PopUpPermissionLoc />} />
+        <Route path="/popupconfirm" element={<PopUpConfirm />} />
+        <Route path="/wsleaderboards" element={<WSLeaderboards />} />
+        <Route path="/insightanalytics" element={<WSInsightAnalytics />} />
+        <Route path="/wsprofile" element={<WSProfile />} />
+        <Route path="/updatedpopup" element={<UpdatedPopUp />} />
+        <Route path="/wslogout" element={<WSLogout />} />
+        <Route path="/confirmlogout" element={<ConfirmLogout />} />
+      </Routes>
+>>>>>>> Stashed changes
     </Router>
   );
 };
