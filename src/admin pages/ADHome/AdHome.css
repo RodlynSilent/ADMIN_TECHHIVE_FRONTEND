@@ -18,6 +18,21 @@
   margin: 30px auto; /* Center the image horizontally and add margin at the top/bottom */
 }
 
+.profile-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.profile-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #8a252c;
+}
+
+
 
 /* Navbar */
 .WSNavbar {
@@ -51,18 +66,6 @@
   cursor: pointer;
   z-index: 1001;
 }
-.profile-picture-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.profile-picture {
-  width: 100px; /* Adjust size as needed */
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-}
 
 .NHome { left: 820px; width: 63px; }
 .NReports { left: 990px; width: 82px; }
@@ -90,11 +93,9 @@
   background-color: rgba(255, 255, 255, 0.25);
   border-radius: 10px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  text-align: center; /* Center content */
-  display: flex;      /* Use flexbox */
-  flex-direction: column; /* Align items in a column */
-  align-items: center;    /* Center items horizontally */
-  justify-content: center; /* Center items vertically */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .post-header {
@@ -123,13 +124,6 @@
   border-radius: 50%;
 }
 
-/* Logo and User Avatar */
-.logo-container {
-  display: inline-block;
-  vertical-align: top;
-  margin-bottom: 10px; /* Add margin to separate avatar from form */
-}
-
 .admins-dp {
   width: 48px;
   height: 46px;
@@ -140,6 +134,12 @@
 /* Post Form */
 .post-form {
   width: 100%;
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
 .post-input {

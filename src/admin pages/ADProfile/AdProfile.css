@@ -42,6 +42,43 @@
     top: 18%;
   }
 
+  .profile-picture-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+  }
+
+  .profile-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #8a252c;
+  }
+
+  .upload-button-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: none;
+    opacity: 1;
+  }
+
+  .upload-button {
+    background-color: #8a252c;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .upload-button:hover {
+    background-color: #9e4c4a;
+  }
+
   .name-details {
     display: flex;
     flex-direction: column;
@@ -62,7 +99,7 @@
   }
 
   .name-details .id-number {
-    margin-bottom: 10px; /* Adjust the space as needed */
+    margin-bottom: 10px;
     margin-top: 10px;
   }
 
@@ -150,6 +187,17 @@
     border-radius: 10px;
     border: none;
   }
+
+  .cancel-btn {
+    width: 107px;
+    height: 39px;
+    background-color: transparent;
+    color: #8a252c;
+    font-weight: 300;
+    font-size: 20px;
+    border-radius: 10px;
+    border: none;
+  }
 }
 
 @media (min-device-width: 320px) and (max-width: 699px) {
@@ -161,6 +209,7 @@
     justify-content: center;
     align-items: center;
     gap: 100px;
+    background: linear-gradient(180deg, #fdfbc9 54.1%, #f9d67b);
   }
 
   .profile-container {
@@ -195,6 +244,38 @@
     margin-top: 30px;
   }
 
+  .profile-picture-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+  }
+
+  .profile-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #8a252c;
+  }
+
+  .upload-button-container {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background: none;
+    opacity: 1;
+  }
+
+  .upload-button {
+    background-color: #8a252c;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
   .name-details {
     display: flex;
     flex-direction: column;
@@ -215,7 +296,7 @@
   }
 
   .name-details .id-number {
-    margin-bottom: 10px; /* Adjust the space as needed */
+    margin-bottom: 10px;
   }
 
   .profile-details button {
@@ -302,44 +383,22 @@
     border-radius: 10px;
     border: none;
   }
+
+  .cancel-btn {
+    width: 107px;
+    height: 39px;
+    background-color: transparent;
+    color: #8a252c;
+    font-weight: 300;
+    font-size: 20px;
+    border-radius: 10px;
+    border: none;
+  }
 }
 
-.profile-picture-container {
-  position: relative;
-  width: 150px; /* Adjust based on your design */
-  height: 150px; /* Adjust based on your design */
-  overflow: hidden;
-  border-radius: 50%;
-}
-
-.profile-picture {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.upload-button-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.profile-picture-container:hover .upload-button-container {
-  opacity: 1;
-}
-
-.upload-button {
-  color: white;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
+.error-message {
+  color: #8a252c;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
 }

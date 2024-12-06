@@ -136,22 +136,24 @@ const WSHomepage = () => {
     const fetchPostsAndPictures = async () => {
       try {
         const response = await axios.get("/posts");
+        console.log("Fetched posts:", response.data); // Debug log
+  
         const sortedPosts = response.data.sort((a, b) => 
           new Date(b.timestamp) - new Date(a.timestamp)
         );
         setPosts(sortedPosts);
   
-        // Set default pictures first
+        // Fetch profile pictures for all users
         const userIds = [...new Set(sortedPosts.map(post => post.userId))];
-        const initialProfilePictures = Object.fromEntries(
-          userIds.map(userId => [userId, defaultProfile])
-        );
-        setUserProfilePictures(initialProfilePictures);
+        console.log("Unique user IDs:", userIds); // Debug log
   
-        // Then fetch actual pictures if user is logged in
-        if (loggedInUser) {
-          userIds.forEach(userId => fetchUserProfilePicture(userId));
-        }
+        userIds.forEach(async userId => {
+          try {
+            await fetchUserProfilePicture(userId);
+          } catch (error) {
+            console.error(`Error fetching profile picture for user ${userId}:`, error);
+          }
+        });
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
@@ -279,25 +281,16 @@ light.color : 'transparent',
   const getPostImage = (post) => {
     if (!post.image) return null;
     
-    // If the image path is already a relative URL (starts with '/'), use it as is
-    if (post.image.startsWith('/')) {
-      return post.image;
-    }
-    
-    // For backward compatibility with existing posts
     if (post.image.startsWith('data:')) {
-      return post.image;
+        return post.image;
     }
     
-    // If it's a full system path, convert it to relative URL
-    // This is a fallback for any existing data in the database
-    if (post.image.includes('\\Upload_report\\')) {
-      const parts = post.image.split('\\Upload_report\\');
-      return `/Upload_report/${parts[1]}`;
+    if (post.image.startsWith('http')) {
+        return post.image;
     }
     
-    return post.image;
-  };
+    return `http://localhost:8080${post.image}`;
+};
 
   const handlePostInputChange = (e) => {
     const content = e.target.value;
@@ -714,19 +707,30 @@ useEffect(() => {
               {post.isSubmittedReport && renderTrafficLights(post.status)}
 
               <div className="card-container">
-                <div className="name-container">
-                  <img src={userProfilePictures[post.userId] || defaultProfile} alt="User Avatar" />
-                  <h5>{post.fullname} ({post.idnumber})</h5>
-                  {loggedInUser && loggedInUser.userId === post.userId && !post.isSubmittedReport && (
-                    <img
-                      src="/delete.png"
-                      alt="Delete"
-                      className="delete-icon"
-                      onClick={() => handleDeletePost(post.postId)}
-                      style={{ cursor: 'pointer', width: '20px', height: '20px', marginLeft: 'auto' }}
-                    />
-                  )}
-                </div>
+              <div className="name-container">
+  <img 
+    src={userProfilePictures[post.userId] || defaultProfile} 
+    alt="User Avatar" 
+    className="users-dp"
+    onError={(e) => {
+      console.error('Error loading profile picture for user:', post.userId);
+      e.target.src = defaultProfile;
+    }}
+  />
+  <h5>
+    {post.fullName || post.fullname} 
+    {post.idNumber || post.idnumber ? ` (${post.idNumber || post.idnumber})` : ''}
+  </h5>
+  {loggedInUser && loggedInUser.userId === post.userId && !post.isSubmittedReport && (
+    <img
+      src="/delete.png"
+      alt="Delete"
+      className="delete-icon"
+      onClick={() => handleDeletePost(post.postId)}
+      style={{ cursor: 'pointer', width: '20px', height: '20px', marginLeft: 'auto' }}
+    />
+  )}
+</div>
                 <div className="timestamp">
                   <span className="formatted-date">{formatTimestamp(post.timestamp)}</span>
                   <br />
@@ -735,13 +739,17 @@ useEffect(() => {
                 <div className="card-contents">
                   <p>{post.content}</p>
                   {post.image && (
-                    <img
-                      className="post-image"
-                      alt="Post"
-                      src={getPostImage(post)}
-                      style={{ maxWidth: '100%', height: 'auto' }}
-                    />
-                  )}
+    <img
+        className="post-image"
+        alt="Post"
+        src={getPostImage(post)}
+        onError={(e) => {
+            console.error('Error loading image:', post.image);
+            e.target.style.display = 'none';
+        }}
+        style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px' }}
+    />
+)}
                 </div>
                 <div className="footer-line" />
                 <div className="footer-actions">

@@ -392,15 +392,33 @@ const handleDeletePost = (postId) => {
         }
     };
 
+    const getPostImage = (post) => {
+        if (!post.image) return null;
+        
+        if (post.image.startsWith('data:')) {
+            return post.image;
+        }
+        
+        if (post.image.startsWith('http')) {
+            return post.image;
+        }
+        
+        return `http://localhost:8080${post.image}`;
+    };
+
     const formatTimestamp = (timestamp) => {
-        const momentDate = moment(timestamp);
-        return momentDate.format('dddd, MMMM D, YYYY [at] h:mm A');
+        const momentDate = moment(timestamp, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
+        return momentDate.isValid() 
+            ? momentDate.format('dddd, MMMM D, YYYY [at] h:mm A')
+            : 'Invalid date';
     };
-
+    
     const getRelativeTime = (timestamp) => {
-        return moment(timestamp).fromNow();
+        const momentDate = moment(timestamp, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
+        return momentDate.isValid() 
+            ? momentDate.fromNow()
+            : 'Invalid date';
     };
-
     const handleClosePost = () => {
         setNewPostContent('');
         setImagePreview(null);
@@ -487,8 +505,11 @@ const handleDeletePost = (postId) => {
                             <div className="card-container">
                             <div className="name-container">
     <img src={superuserProfilePictures[post.superUserId] || defaultProfile} alt="SuperUser Avatar" />
-    <h5>{post.fullName} ({post.superuseridNumber})</h5>
-    {/* Remove ownership check here, allowing all SuperUsers to see delete icon */}
+    <h5>
+        {post.fullName || post.fullname} 
+        {post.idNumber || post.idnumber || post.superuseridNumber ? 
+            ` (${post.idNumber || post.idnumber || post.superuseridNumber})` : ''}
+    </h5>
     {loggedInSuperUser && (
         <img
             src="/delete.png"
@@ -500,21 +521,28 @@ const handleDeletePost = (postId) => {
     )}
 </div>
 
-                                <div className="timestamp">
-                                    <span className="formatted-date">{formatTimestamp(post.timestamp)}</span>
-                                    <br />
-                                    <span className="relative-time">{getRelativeTime(post.timestamp)}</span>
-                                </div>
+<div className="timestamp" style={{ marginBottom: '10px', color: '#666' }}>
+    <div className="formatted-date" style={{ fontSize: '14px' }}>
+        {moment(post.timestamp, 'YYYY-MM-DD HH:mm:ss.SSSSSS').format('dddd, MMMM D, YYYY [at] h:mm A')}
+    </div>
+    <div className="relative-time" style={{ fontSize: '12px', color: '#888' }}>
+        {moment(post.timestamp, 'YYYY-MM-DD HH:mm:ss.SSSSSS').fromNow()}
+    </div>
+</div>
                                 <div className="card-contents">
                                     <p>{post.content}</p>
-                                    {post.image && (
-                                        <img
-                                            className="post-image"
-                                            alt="Post"
-                                            src={post.image}
-                                            style={{ maxWidth: '100%', height: 'auto' }}
-                                        />
-                                    )}
+                                   {post.image && (
+    <img
+        className="post-image"
+        alt="Post"
+        src={getPostImage(post)}
+        onError={(e) => {
+            console.error('Error loading image:', post.image);
+            e.target.style.display = 'none';
+        }}
+        style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px' }}
+    />
+)}
                                 </div>
                                 <div className="footer-line" />
                                 <div className="footer-actions">

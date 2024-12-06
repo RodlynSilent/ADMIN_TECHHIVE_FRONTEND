@@ -4,6 +4,7 @@ import "./AdProfile.css";
 import LogoutDialog from "../../components/LogoutDialog";
 import EditSuccessfulDialog from "./EditSuccessfulDialog";
 import ErrorDialog from "./ErrorDialog";
+import ProfilePicture from "../../components/ProfilePicture";
 
 const AdProfile = () => {
   const [isEditable, setIsEditable] = useState(false);
@@ -19,7 +20,6 @@ const AdProfile = () => {
     console.log("Logged in admin:", loggedInAdmin);
     if (loggedInAdmin) {
       setAdmin(loggedInAdmin);
-      // Updated endpoint to match backend controller
       fetch(`http://localhost:8080/api/profile/admin/getProfilePicture/${loggedInAdmin.adminId}`)
         .then(response => response.blob())
         .then(blob => {
@@ -34,40 +34,22 @@ const AdProfile = () => {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
+  
+    // Check file size (e.g., 5MB limit)
+    const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+    if (file.size > MAX_SIZE) {
+      setShowErrorMessage(true);
+      console.error("File size exceeds 5MB limit");
+      return;
+    }
+  
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("id", admin.adminId); // Updated to match backend parameter name
+    formData.append("id", admin.adminId);
+    
+    // Rest of your upload code...
+  }
 
-    try {
-      // Updated endpoint to match backend controller
-      const response = await fetch(`http://localhost:8080/api/profile/admin/uploadProfilePicture`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log("Profile picture updated successfully:", result);
-      
-      // Refresh the profile picture immediately after successful upload
-      const pictureResponse = await fetch(`http://localhost:8080/api/profile/admin/getProfilePicture/${admin.adminId}`);
-      const pictureBlob = await pictureResponse.blob();
-      const newProfilePictureUrl = URL.createObjectURL(pictureBlob);
-      setProfilePicture(newProfilePictureUrl);
-    } catch (error) {
-      console.error("Error uploading profile picture:", error);
-      setShowErrorMessage(true);
-      setTimeout(() => {
-        setShowErrorMessage(false);
-      }, 3000);
-    }
-  };
-
-  // Rest of the component remains the same...
   const handleEditClick = () => {
     setIsEditable(true);
     setCurrentPassword("");
@@ -124,20 +106,11 @@ const AdProfile = () => {
       <main className="adprofile-container">
         <div className="profile-container">
           <div className="profile-details">
-            <div className="profile-picture-container">
-              <img src={profilePicture} alt="Profile" className="profile-picture" />
-              <div className="upload-button-container">
-                <label className="upload-button">
-                  Upload
-                  <input 
-                    type="file" 
-                    onChange={handleFileChange} 
-                    accept="image/*"
-                    style={{ display: "none" }} 
-                  />
-                </label>
-              </div>
-            </div>
+            <ProfilePicture
+              currentPicture={profilePicture}
+              adminId={admin.adminId}
+              onUpdateSuccess={setProfilePicture}
+            />
             <div className="name-details">
               <span className="id-number">{admin.idNumber}</span>
               <h1>{admin.fullName}</h1>
