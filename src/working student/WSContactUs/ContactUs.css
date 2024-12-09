@@ -365,7 +365,8 @@
         position: absolute;
         display: inline-block;
         top: 40px;
-        left: 70%;
+        left: 73%;
+        transform: translateX(-50%);
         width: auto;
         font-size: 16px;
         cursor: pointer;
@@ -497,33 +498,28 @@
     .eInput,
     .pnInput,
     .mInput {
-        position: static;
-        transform: none;
-        width: 79.5%;
-        height: 40px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-    }
-
-    .ynInput {
-        margin-top: 430px;
+        top: 54%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 30px;
     }
 
     .eInput {
-        margin-top: 5px;
+        top: 61%;
     }
 
     .pnInput {
-        margin-top: 5px;
+        top: 68%;
     }
 
     .mInput {
-        height: 100px;
-        margin-top: 5px;
+        top: 75%;
+        height: 70px;
     }
 
     .submit-button {
-        top: 100%;
+        top: 91%;
         left: 78%;
         width: auto;
         font-size: 14px;
@@ -562,7 +558,7 @@
     .get-started {
         display: inline-block;
         top: 40px !important;
-        left: 79% !important;
+        left: 73% !important;
         transform: translateX(-50%) !important;
         width: auto !important;
     }
@@ -585,7 +581,7 @@
 
     .phone {
         top: 22%;
-        left: 19%;
+        left: 17%;
         width: 40%;
         height: auto;
         font-size: 14px;
@@ -593,7 +589,7 @@
 
     .phone-num {
         top: 25%;
-        left: 19%;
+        left: 17%;
         width: 40%;
         height: auto;
         font-size: 14px;
@@ -607,15 +603,15 @@
     }
 
     .phone-icon {
-        top: 22.7%;
-        left: 8.5%;
+        top: 22.5%;
+        left: 7.5%;
         width: auto;
-        height: 3.5%;
+        height: 4%;
     }
 
     .email {
         top: 29%;
-        left: 19%;
+        left: 17%;
         width: 40%;
         height: auto;
         font-size: 14px;
@@ -623,7 +619,7 @@
 
     .email-mail {
         top: 32%;
-        left: 19%;
+        left: 17%;
         width: 40%;
         height: auto;
         font-size: 14px;
@@ -637,15 +633,15 @@
     }
 
     .email-icon {
-        top: 30.2%;
-        left: 8.9%;
+        top: 30%;
+        left: 8.3%;
         width: auto;
-        height: 2.8%;
+        height: 3%;
     }
 
     .location {
         top: 36%;
-        left: 19%;
+        left: 17%;
         width: 40%;
         height: auto;
         font-size: 14px;
@@ -653,7 +649,7 @@
 
     .location-name {
         top: 39%;
-        left: 19%;
+        left: 17%;
         width: 70%;
         height: auto;
         font-size: 14px;
@@ -668,13 +664,13 @@
 
     .location-icon {
         top: 36.5%;
-        left: 8.3%;
+        left: 7.7%;
         width: auto;
         height: 4%;
     }
 
     .Lets-title {
-        top: 47%;
+        top: 50%;
         left: 50%;
         transform: translateX(-50%);
         width: auto;
@@ -682,7 +678,7 @@
     }
 
     .feel-free-to {
-        top: 51%;
+        top: 55%;
         left: 50%;
         transform: translateX(-50%);
         width: 80%;
@@ -693,33 +689,29 @@
     .eInput,
     .pnInput,
     .mInput {
-        position: static;
-        transform: none;
-        width: 79.5%;
-        height: 40px;
+        top: 60%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 30px;
         border-radius: 10px;
-        margin-bottom: 10px;
-    }
-
-    .ynInput {
-        margin-top: 400px;
     }
 
     .eInput {
-        margin-top: -3px;
+        top: 67%;
     }
 
     .pnInput {
-        margin-top: -3px;
+        top: 74%;
     }
 
     .mInput {
-        height: 100px;
-        margin-top: -3px;
+        top: 81%;
+        height: 70px;
     }
 
     .submit-button {
-        top: 100%;
+        top: 94%;
         left: 72%;
         width: auto;
         font-size: 14px;

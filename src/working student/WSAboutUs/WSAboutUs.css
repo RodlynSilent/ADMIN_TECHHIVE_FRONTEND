@@ -269,14 +269,16 @@
 
   .contact-us2 {
     top: 50px;
-    left: 19%;
+    left: 25%;
+    transform: translateX(-50%);
     width: auto;
     font-size: 16px;
   }
 
   .get-started2 {
     top: 50px;
-    left: 70%;
+    left: 73%;
+    transform: translateX(-50%);
     width: auto;
     font-size: 16px;
     cursor: pointer;
@@ -293,9 +295,13 @@
   .member-name {
     top: 23%;
     left: 10%;
+    /* transform: translateX(-50%) !important; */
+    /* width: 70% !important;
+    height: auto !important; */
   }
 
   .members-dp {
+    /* position: absolute; */
     top: 32%;
     width: 40%;
     height: 35%;
@@ -430,15 +436,17 @@
   }
 
   .contact-us2 {
-    top: 40px;
-    left: 15%;
-    width: auto;
-    font-size: 16px;
+    top: 40px !important;
+    left: 25% !important;
+    transform: translateX(-50%) !important;
+    width: auto !important;
+    font-size: 16px !important;
   }
 
   .get-started2 {
     top: 40px;
-    left: 66%;
+    left: 73%;
+    transform: translateX(-50%);
     width: auto;
     height: 23px;
   }
@@ -519,7 +527,7 @@
 
   .motto-icon {
     top: 45.6%;
-    left: 51.0%;
+    left: 51.3%;
     height: 2.5%;
     width: auto;
   }
@@ -546,7 +554,7 @@
 
   .hobbies-icon {
     top: 58%;
-    left: 49.5%;
+    left: 50.3%;
     height: 4%;
     width: auto;
   }

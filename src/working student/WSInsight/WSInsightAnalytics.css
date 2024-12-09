@@ -177,6 +177,7 @@
   white-space: nowrap; /* Prevent wrapping */
 }
 
+
 .BarGraph {
   position: absolute;
   left: 45px;
@@ -185,22 +186,292 @@
   height: 402px;
 }
 
+.grayline {
+  position: absolute;
+  left: 28px;
+  top: 284px;
+  width: 800px;
+  height: 10px;
+  background: rgba(217, 217, 217, 1);
+  border-radius: 7px;
+}
+
+.PAContainer {
+  position: absolute;
+  left: 42px;
+  top: 315px;
+  width: 125px;
+  height: 14px;
+}
+
+.PhysicalAccident {
+  position: absolute;
+  left: 19px;
+  top: 0px;
+  width: 106px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.PABox {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  background: rgba(249, 65, 68, 1);
+  border-radius: 4px;
+}
+
+.EAContainer {
+  position: absolute;
+  left: 263px;
+  top: 316px;
+  width: 155px;
+  height: 14px;
+}
+
+.EnvironmentalAccident {
+  position: absolute;
+  left: 19px;
+  top: 0px;
+  width: 135px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.EABox {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  background: rgba(249, 132, 74, 0.78);
+  border-radius: 4px;
+}
+
+.VAContainer {
+  position: absolute;
+  left: 513px;
+  top: 316px;
+  width: 125px;
+  height: 14px;
+}
+
+.VehicleAccident {
+  position: absolute;
+  left: 19px;
+  top: 0px;
+  width: 106px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.VABox {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  background: rgba(67, 170, 139, 1);
+  border-radius: 4px;
+}
+
+.LAContainer {
+  position: absolute;
+  left: 42px;
+  top: 351px;
+  width: 128px;
+  height: 14px;
+}
+
+.LaboratoryAccident {
+  position: absolute;
+  left: 19px;
+  top: 0px;
+  width: 109px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.LABox {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  background: rgba(243, 114, 44, 1);
+  border-radius: 4px;
+}
+
+.FireRelatedContainer {
+  position: absolute;
+  left: 263px;
+  top: 351px;
+  width: 136px;
+  height: 14px;
+}
+
+.FireRelatedAccident {
+  position: absolute;
+  left: 19px;
+  top: 0px;
+  width: 116px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.FireRelatedBox {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  background: rgba(249, 199, 79, 1);
+  border-radius: 4px;
+}
+
+.EquipmentRelatedContainer {
+  position: absolute;
+  left: 513px;
+  top: 351px;
+  width: 178px;
+  height: 14px;
+}
+
+.EquipmentRelatedAccident {
+  position: absolute;
+  left: 19px;
+  top: 0px;
+  width: 159px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.EquipmentRelatedBox {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  background: rgba(77, 144, 142, 1);
+  border-radius: 4px;
+}
+
+.FacilityRelatedContainer {
+  position: absolute;
+  left: 42px;
+  top: 387px;
+  width: 153px;
+  height: 14px;
+}
+
+.FacilityRelatedAccident {
+  position: absolute;
+  left: 18px;
+  top: 0px;
+  width: 135px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.FacilityRelatedBox {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  background: rgba(248, 150, 30, 1);
+  border-radius: 4px;
+}
+
+.HRContainer {
+  position: absolute;
+  left: 263px;
+  top: 387px;
+  width: 152px;
+  height: 14px;
+}
+
+.HealthRelatedAccident {
+  position: absolute;
+  left: 19px;
+  top: 0px;
+  width: 133px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.HRBox {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  background: rgba(144, 190, 109, 1);
+  border-radius: 4px;
+}
+
+.EventContainer {
+  position: absolute;
+  left: 513px;
+  top: 387px;
+  width: 55px;
+  height: 14px;
+}
+
+.Event {
+  position: absolute;
+  left: 19px;
+  top: 0px;
+  width: 36px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.EventBox {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 14px;
+  height: 14px;
+  background: rgba(43, 93, 138, 1);
+  border-radius: 4px;
+}
+
 .PieChartContainer {
   position: relative; /* Change from absolute */
   margin: 1140px auto; /* Center using margin auto */
   width: 400px; /* Set a fixed width */
-  height: 370px; /* Set a fixed height */
+  height: 400px; /* Set a fixed height */
   text-align: center; /* Center text alignment */
-}
-
-.PieBackground {
-  position: absolute;
-  left: 242px;
-  top: 1130px;
-  width: 961px;
-  height: 490px;
-  background: rgba(255, 255, 255, 0.65);
-  border-radius: 15px;
 }
 
 .custom-legend {
@@ -425,7 +696,7 @@
   }
 
   .InsightTitle {
-    top: 3% !important;
+    top: 4% !important;
     left: 38% !important;
     width: 200px !important;
     height: 180px !important;
@@ -441,8 +712,8 @@
   .WSInsightBox {
     top: 300px;
     left: 5%;
-    width: 91.5%;
-    height: 41%;
+    width: 90%;
+    height: 45%;
   }
 
   .TotalWrapper {
@@ -450,8 +721,8 @@
   }
 
   .YearContainer {
-    top: 11%;
-    left: 8%;
+    top: 13%;
+    left: 10%;
     width: 40%;
     height: 5%;
   }
@@ -461,62 +732,99 @@
   }
 
   .BarGraphContainer {
-    left: 8%;
+    left: 10%;
     width: 90%;
     top: 400px;
   }
 
   .BarBox {
     top: 10%;
-    width: 95%;
+    width: 90%;
     height: 90%;
   }
 
-  .BarGraph {
-    left: 3%;
-    margin-top: 40px;
-}
-
   .MonthlyAccidentEventStats {
     top: 15%;
-    left: 48%;
+    left: 28%;
     font-size: 18px;
   }
 
-  .PieBackground {
-    top: 33%;
-    left: 8%;
-    width: 85%;
-    height: 17.5%;
+  .grayline {
+    left: 4%;
+    width: 530px;
+  }
+
+  .PAContainer,
+  .LAContainer,
+  .FacilityRelatedContainer {
+    left: 4%;
+  }
+
+  .EAContainer,
+  .FireRelatedContainer,
+  .HRContainer {
+    left: 38%;
+  }
+
+  .VAContainer,
+  .EquipmentRelatedContainer,
+  .EventContainer {
+    left: 70%;
+  }
+
+  .PhysicalAccident,
+  .EnvironmentalAccident,
+  .VehicleAccident,
+  .LaboratoryAccident,
+  .FireRelatedAccident,
+  .EquipmentRelatedAccident,
+  .FacilityRelatedAccident,
+  .HealthRelatedAccident,
+  .Event {
+    font-size: 10px;
   }
 
   .PieChartContainer {
-    width: 300px; /* Reduce the width */
-    height: 300px; /* Reduce the height */
-    margin-top: 1000px;
+    left: 10%;
+    top: 38%;
   }
 
-  .custom-legend {
-    width: 100px;
-    height: 100px;
-    font-size: 15px;
+  .PieBackground {
+    width: 65%;
   }
 
+  .PieContainer {
+    left: 10%;
+  }
+
+  .ApprovedDeniedReports {
+    left: 7%;
+    top: -20%;
+    font-size: 18px;
+  }
+
+  .PieGroup {
+    left: 27%;
+    top: 10%;
+    height: 73%;
+  }
+
+ 
 
   .Toggle {
     left: -40%;
-    top: -440%;
+    top: -500%;
   }
 
   .ReportFeedback {
     left: -20%;
-    top: -450%;
+    top: -510%;
   }
 
   .WSInsightBox2 {
     left: 5%;
-    top: 56%;
-    width: 86%;
+    top: 63%;
+    width: 90%;
     height: 15%;
   }
 
@@ -600,11 +908,11 @@
     top: 240px;
     left: 5%;
     width: 90%;
-    height: 45%;
+    height: 58%;
   }
 
   .YearContainer {
-    top: 12% !important;
+    top: 13% !important;
     left: 8% !important;
     width: 38% !important;
     height: 4% !important;
@@ -618,37 +926,60 @@
   .BarGraphContainer {
     left: 8%;
     width: 85%;
-    top: 325px;
+    top: 320px;
   }
 
   .BarBox {
     top: 8%;
     width: 99%;
-    height: 85%;
+    height: 110%;
   }
 
   .MonthlyAccidentEventStats {
     top: 12%;
-    left: 50%;
+    left: 26%;
     font-size: 14px;
   }
 
-  .PieBackground {
-    top: 38%;
-    height: 17%;
+  .grayline {
+    left: 3.5%;
+    width: 340px;
+  }
+
+  .PAContainer,
+  .LAContainer,
+  .FacilityRelatedContainer {
+    left: -3%;
+  }
+
+  .EAContainer,
+  .FireRelatedContainer,
+  .HRContainer {
+    left: 52%;
+  }
+
+  .VAContainer,
+  .EquipmentRelatedContainer,
+  .EventContainer {
+    margin-top: 6.5rem;
+    left: 23%;
+  }
+
+  .PhysicalAccident,
+  .EnvironmentalAccident,
+  .VehicleAccident,
+  .LaboratoryAccident,
+  .FireRelatedAccident,
+  .EquipmentRelatedAccident,
+  .FacilityRelatedAccident,
+  .HealthRelatedAccident,
+  .Event {
+    font-size: 9px;
   }
 
   .PieChartContainer {
-    width: 210px; /* Reduce the width */
-    height: 210px; /* Reduce the height */
-    margin-top: 860px;
-    font-size: 10px;
-  }
-
-  .custom-legend {
-    width: 50px;
-    height: 60px;
-    font-size: 7px;
+    left: 8%;
+    top: 50%;
   }
 
   .Toggle {
@@ -657,7 +988,7 @@
   }
 
   .minimized .ReportFeedbackContainer {
-    top: 1600px;
+    top: 1800px;
     /* Adjust this value as needed */
   }
 
@@ -668,9 +999,9 @@
 
   .WSInsightBox2 {
     left: 5% !important;
-    top: 65%;
-    width: 83% !important;
-    height: 25% !important;
+    top: 75%;
+    width: 90% !important;
+    height: 16% !important;
   }
 
   .TableContainer {

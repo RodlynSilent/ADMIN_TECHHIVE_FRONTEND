@@ -421,14 +421,20 @@
 }
 
 @keyframes shake {
-    0%, 100% { 
-        box-shadow: none; 
+    0% {
+        transform: translateX(0);
     }
-    10%, 30%, 50%, 70%, 90% { 
-        box-shadow: -2px 0 0 red;
+    25% {
+        transform: translateX(-5px);
     }
-    20%, 40%, 60%, 80% { 
-        box-shadow: 2px 0 0 red;
+    50% {
+        transform: translateX(5px);
+    }
+    75% {
+        transform: translateX(-5px);
+    }
+    100% {
+        transform: translateX(0);
     }
 }
 
@@ -578,8 +584,9 @@
 
     .signupContainer {
         top: 84%;
-        left: 40%;
-        width: 23%;
+        left: 38%;
+        transform: translateX(0);
+        width: 25%;
         height: auto;
     }
 
@@ -590,7 +597,7 @@
 
     .s-name {
         top: 5px;
-        left: 55%;
+        left: 57%;
         transform: translateX(-50%);
         font-size: 17px;
     }
@@ -612,12 +619,12 @@
 
     .q1 {
         top: 90%;
-        left: 74% !important;
+        left: 62% !important;
     }
 
     .q2 {
         top: 90%;
-        left: 100% !important;
+        left: 107% !important;
     }
 
     .modal-content {
