@@ -39,11 +39,18 @@ const locations = [
   { name: "Espacio CIT-U" },
 ];
 
+const LIBRARY_LOCATION = {
+  name: "Near the CIT-U Library",
+  latitude: 10.295126406663186,
+  longitude: 123.88045279749396
+};
+
 // Modal for the "Outside Campus" warning
 const OutsideCampusWarningModal = ({ onClose }) => (
   <div className="modal-overlay">
     <div className="modal-content outside-campus-warning">
       <h3>You are outside the campus area.</h3>
+      <p>Your location will be set to: Near the CIT-U Library</p>
       <button onClick={onClose} className="ok-button">OK</button>
     </div>
   </div>
@@ -308,12 +315,24 @@ const PopUpReportFinal = ({ onBack, onClose, locationDenied = false, onLocationR
           console.error("Geolocation error:", error);
           setFormData((prev) => ({
             ...prev,
-            location: { address: "Unable to get location", latitude: null, longitude: null },
+            location: {
+              address: LIBRARY_LOCATION.name,
+              latitude: LIBRARY_LOCATION.latitude,
+              longitude: LIBRARY_LOCATION.longitude
+            },
           }));
         }
       );
     } else {
       alert("Geolocation is not supported by this browser.");
+      setFormData((prev) => ({
+        ...prev,
+        location: {
+          address: LIBRARY_LOCATION.name,
+          latitude: LIBRARY_LOCATION.latitude,
+          longitude: LIBRARY_LOCATION.longitude
+        },
+      }));
     }
   };
 
@@ -321,12 +340,16 @@ const PopUpReportFinal = ({ onBack, onClose, locationDenied = false, onLocationR
     try {
       const response = await axios.get(`/api/locations/check-location?latitude=${latitude}&longitude=${longitude}`);
       const nearestBuilding = response.data;
-
+  
       if (nearestBuilding === "Outside Campus") {
         setShowOutsideCampusWarning(true);
         setFormData((prev) => ({
           ...prev,
-          location: { address: "Outside Campus", latitude, longitude },
+          location: {
+            address: LIBRARY_LOCATION.name,
+            latitude: LIBRARY_LOCATION.latitude,
+            longitude: LIBRARY_LOCATION.longitude
+          },
         }));
       } else {
         setFormData((prev) => ({
@@ -338,7 +361,11 @@ const PopUpReportFinal = ({ onBack, onClose, locationDenied = false, onLocationR
       console.error("Error getting location details:", error);
       setFormData((prev) => ({
         ...prev,
-        location: { address: "Error getting location", latitude: null, longitude: null },
+        location: {
+          address: LIBRARY_LOCATION.name,
+          latitude: LIBRARY_LOCATION.latitude,
+          longitude: LIBRARY_LOCATION.longitude
+        },
       }));
     }
   };
@@ -403,10 +430,21 @@ const PopUpReportFinal = ({ onBack, onClose, locationDenied = false, onLocationR
 
   const handleLocationChange = (event) => {
     const selectedLocation = event.target.value;
-    setFormData((prev) => ({
-      ...prev,
-      location: { address: selectedLocation, latitude: null, longitude: null },
-    }));
+    if (!selectedLocation) {
+      setFormData((prev) => ({
+        ...prev,
+        location: {
+          address: LIBRARY_LOCATION.name,
+          latitude: LIBRARY_LOCATION.latitude,
+          longitude: LIBRARY_LOCATION.longitude
+        },
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        location: { address: selectedLocation, latitude: null, longitude: null },
+      }));
+    }
   };
 
   const handleChooseLocation = () => {
