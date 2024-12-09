@@ -216,9 +216,11 @@ const PopUpReportFinal = ({ onBack, onClose, locationDenied = false, onLocationR
   }, [formData]);
 
   const handleBack = useCallback(() => {
-    setIsVisible(false);
+    // Close the current popup completely
+    onClose();
+    // Navigate to the wsreport page
     navigate("/wsreport");
-  }, [navigate]);
+  }, [navigate, onClose]);
 
   const onPopUpReportClick = useCallback(() => {
     if (validateInputs()) {
