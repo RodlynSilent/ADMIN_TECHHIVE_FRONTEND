@@ -1,7 +1,5 @@
-/* SUHome.css */
-
 /* Main container */
-.suhome {
+.adhome {
   width: 100%;
   position: relative;
   background: linear-gradient(180deg, #fdfbc9 54.1%, #f9d67b);
@@ -18,13 +16,6 @@
   height: 270px; /* Set the height to 210px */
   display: block;
   margin: 30px auto; /* Center the image horizontally and add margin at the top/bottom */
-}
-
-.sutraffic-light-container {
-  position: absolute;
-  top: 27px;
-  right: 60px;
-  z-index: 1;
 }
 
 

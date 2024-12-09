@@ -18,7 +18,6 @@ const WSProfile = ({ className = "" }) => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [isProfileUpdateSuccessVisible, setIsProfileUpdateSuccessVisible] = useState(false);
-  const [userPoints, setUserPoints] = useState(0);
   const defaultProfilePicture = 'default.png';
   const navigate = useNavigate();
 
@@ -46,28 +45,13 @@ const WSProfile = ({ className = "" }) => {
     }
   }, [defaultProfilePicture]);
 
-  const fetchUserPoints = useCallback(async (userId) => {
-    try {
-      const response = await axios.get(`/api/leaderboard/user/${userId}`);
-      if (response.data) {
-        setUserPoints(response.data.points);
-        setLoggedInUser(prev => ({
-          ...prev,
-          points: response.data.points
-        }));
-      }
-    } catch (error) {
-      console.error("Failed to fetch user points:", error.response?.data || error.message);
-    }
-  }, []);
-
   const determineBadge = (points) => {
     if (points >= 100) {
-      return "/Wildcat-Champion.png";
+      return "/Wildcat-Champion.png"; // Champion badge
     } else if (points >= 80) {
-      return "/Wildcat-Prowler.png";
+      return "/Wildcat-Prowler.png"; // Prowler badge
     } else {
-      return "/Wildcat-Pub.png";
+      return "/Wildcat-Pub.png"; // Cub badge
     }
   };
   
@@ -75,15 +59,8 @@ const WSProfile = ({ className = "" }) => {
     const user = fetchLoggedInUser();
     if (user) {
       fetchProfilePicture(user.userId);
-      fetchUserPoints(user.userId);
-
-      const pointsInterval = setInterval(() => {
-        fetchUserPoints(user.userId);
-      }, 30000);
-
-      return () => clearInterval(pointsInterval);
     }
-  }, [fetchLoggedInUser, fetchProfilePicture, fetchUserPoints]);
+  }, [fetchLoggedInUser, fetchProfilePicture]);
 
   const openLOGOUTConfirmation = () => {
     setIsConfirmLogoutVisible(true);
@@ -156,7 +133,7 @@ const WSProfile = ({ className = "" }) => {
         });
   
         if (response.status === 200) {
-          fetchProfilePicture(loggedInUser.userId);
+          fetchProfilePicture(loggedInUser.userId); // Refresh profile picture
           setIsProfileUpdateSuccessVisible(true);
         }
       } catch (error) {
@@ -171,12 +148,11 @@ const WSProfile = ({ className = "" }) => {
     return null;
   }
 
-  const badgeUrl = determineBadge(userPoints);
-  
+  const badgeUrl = determineBadge(loggedInUser.points); // Define badgeUrl here
   return (
     <div>
       <div className={`ws-profile ${className}`}>
-        <WSNavBar />
+      <WSNavBar />
         <img className="WSProfileBg" alt="" src="/profilebg.png" />
         <div className="ProfilePictureContainer">
           <img className="WSProfileUser" alt="" src={profilePicture || defaultProfilePicture} />
@@ -194,10 +170,10 @@ const WSProfile = ({ className = "" }) => {
           />
 
           <img className="WSProfileBadge" alt="User Badge" src={badgeUrl} />
-          <div className="WSID">{loggedInUser ? loggedInUser.idNumber : ""}</div>
-          <div className="WSName">{loggedInUser ? loggedInUser.fullName : ""}</div>
-          <div className="WSEdu">{loggedInUser ? loggedInUser.email : ""}</div>
-          <div className="WSPoints">{userPoints} points</div>
+          <div className="WSID">{loggedInUser ? loggedInUser.idNumber : "hi"}</div>
+          <div className="WSName">{loggedInUser ? loggedInUser.fullName : "hello"}</div>
+          <div className="WSEdu">{loggedInUser ? loggedInUser.email : "Hi"}</div>
+          <div className="WSPoints">{loggedInUser ? loggedInUser.points : 0} points</div>
 
           <div className="WSPLogout">
             <Button
@@ -221,6 +197,7 @@ const WSProfile = ({ className = "" }) => {
             </Button>
           </div>
 
+          {/* Password section */}
           <div className="PasswordGroup">
             <div className="PasswordBox" />
             <b className="PasswordName">Password</b>
@@ -292,6 +269,7 @@ const WSProfile = ({ className = "" }) => {
           </div>
         </div>
 
+        {/* Modals */}
         {isPopUpVisible && (
           <div className="popup-overlay">
             <UpdatedPopUp onClose={closeUpdatedPopUp} />
@@ -326,6 +304,7 @@ const WSProfile = ({ className = "" }) => {
   );
 };
 
+// ErrorPopUp component
 const ErrorPopUp = ({ message, onClose }) => {
   return (
     <div className="error-popup">
@@ -353,6 +332,7 @@ const ErrorPopUp = ({ message, onClose }) => {
   );
 };
 
+// ProfileUpdateSuccessModal component
 const ProfileUpdateSuccessModal = ({ onClose }) => {
   return (
     <div className="popup-overlay">

@@ -1,5 +1,3 @@
-/*AdHome.css */
-
 /* Main container */
 .adhome {
   width: 100%;
@@ -81,15 +79,6 @@
   width: 323px;
   height: 77px;
   text-align: center;
-}
-
-.adhometraffic-light-container {
-  position: absolute !important;
-  top: 10px !important;
-  right: 10px !important;
-  z-index: 10 !important;
-  display: flex !important;
-  align-items: center !important;
 }
 
 /* Post Container */
@@ -247,7 +236,6 @@
 .card-container {
   display: flex;
   flex-direction: column;
-  position: relative !important;
 }
 
 /* Name Container */
