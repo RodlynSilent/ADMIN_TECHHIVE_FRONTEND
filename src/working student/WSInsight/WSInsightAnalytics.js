@@ -4,12 +4,12 @@ import axios from "../../services/axiosInstance";
 import { format } from 'date-fns';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import WSNavBar from '../WSHomepage/WSNavBar';
- 
+
 import { Chart, ArcElement, BarElement, Tooltip, CategoryScale, LinearScale, Legend } from 'chart.js';
 import './WSInsightAnalytics.css';
- 
+
 Chart.register(ArcElement, Tooltip, BarElement, CategoryScale, LinearScale, ChartDataLabels, Legend);
- 
+
 const WSInsightAnalytics = () => {
   const [currentYear, setCurrentYear] = useState(2024);
   const [isFeedbackVisible, setFeedbackVisible] = useState(false);
@@ -21,33 +21,33 @@ const WSInsightAnalytics = () => {
     denied: 0, // Default values to avoid ReferenceError
   });
   const [pendingReportsByMonth, setPendingReportsByMonth] = useState([]);
- 
+
   const decrementYear = () => {
     setCurrentYear(prev => prev - 1);
   };
- 
+
   const incrementYear = () => {
     setCurrentYear(prev => prev + 1);
   };
- 
+
   const toggleFeedback = () => {
     setFeedbackVisible(prev => !prev);
   };
- 
- 
-  const totalReports =
-  (reportStatusCounts.pending || 0) +
-  (reportStatusCounts.acknowledged || 0) +
-  (reportStatusCounts.ongoing || 0) +
+
+
+  const totalReports = 
+  (reportStatusCounts.pending || 0) + 
+  (reportStatusCounts.acknowledged || 0) + 
+  (reportStatusCounts.ongoing || 0) + 
   (reportStatusCounts.resolved || 0);
- 
+
 const percentages = {
   pending: totalReports > 0 ? ((reportStatusCounts.pending || 0) / totalReports * 100).toFixed(1) : 0,
   acknowledged: totalReports > 0 ? ((reportStatusCounts.acknowledged || 0) / totalReports * 100).toFixed(1) : 0,
   ongoing: totalReports > 0 ? ((reportStatusCounts.ongoing || 0) / totalReports * 100).toFixed(1) : 0,
   resolved: totalReports > 0 ? ((reportStatusCounts.resolved || 0) / totalReports * 100).toFixed(1) : 0,
 };
- 
+
 const data = {
   labels: ['Pending', 'Acknowledged', 'On-going', 'Resolved'],
   datasets: [
@@ -63,7 +63,7 @@ const data = {
     },
   ],
 };
- 
+
 const options = {
   responsive: true,
   plugins: {
@@ -91,8 +91,8 @@ const options = {
     },
   },
 };
- 
- 
+
+
 const barData = {
   labels: [
     "January", "February", "March", "April", "May", "June",
@@ -108,8 +108,8 @@ const barData = {
     },
   ],
 };
- 
- 
+
+
 // Bar chart options
 const barOptions = {
   responsive: true,
@@ -144,7 +144,7 @@ const barOptions = {
       try {
         const userId = JSON.parse(localStorage.getItem("loggedInUser"))?.userId;
         if (!userId) return;
- 
+  
         // API call to get the counts of pending, approved, and denied reports
         const response = await axios.get(`/api/user/reports/reportStatusCounts/${userId}`);
         console.log("Report Status Counts Response:", response.data); // Debugging log
@@ -153,74 +153,73 @@ const barOptions = {
         console.error("Failed to fetch report status counts:", error);
       }
     };
- 
+  
     fetchReportStatusCounts();
   }, []);
- 
- 
+  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userId = JSON.parse(localStorage.getItem("loggedInUser"))?.userId;
         if (!userId) return;
-
+  
         // Fetch total reports
         const totalResponse = await axios.get(`/api/feedback/totalReports/${userId}`);
-        console.log("Total Reports Response:", totalResponse.data);
+        console.log("Total Reports Response:", totalResponse.data); // Debugging log
         setFetchedTotalReports(totalResponse.data.totalReports);
-
-        // Fetch all user reports instead of just feedback
-        const reportsResponse = await axios.get(`/api/user/reports/user/${userId}`);
-        console.log("Reports List Response:", reportsResponse.data);
-        setFeedbackList(reportsResponse.data); // Using existing feedbackList state to store reports
-
+  
+        // Fetch feedback list
+        const feedbackResponse = await axios.get(`/api/feedback/latest/${userId}`);
+        console.log("Feedback List Response:", feedbackResponse.data); // Debugging log
+        setFeedbackList(feedbackResponse.data);
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
     };
-
+  
     fetchData();
   }, []);
- 
+
   useEffect(() => {
     const fetchPendingReports = async () => {
       try {
         // Make sure the API endpoint returns the pending reports for each month
         const response = await axios.get("/api/user/reports/pending/monthly");
         console.log("Pending Reports by Month:", response.data);  // Check the response structure
- 
+  
         // Initialize an array with 0s for each month
         const monthlyData = Array(12).fill(0);  // Default data for all 12 months
- 
+  
         // Populate the array with the actual data from the response
         response.data.forEach((item) => {
           const monthIndex = item.month - 1; // Adjust month to 0-based index
           monthlyData[monthIndex] = item.count; // Set the count for the corresponding month
         });
- 
+  
         // Update the state with the monthly data
         setPendingReportsByMonth(monthlyData);
       } catch (error) {
         console.error("Error fetching pending reports by month:", error);
       }
     };
- 
+  
     fetchPendingReports();
   }, []); // Runs only once on mount
- 
- 
- 
- 
- 
+  
+  
+  
+  
+  
   return (
     <div className={`WSInsightAnalytics_WSInsightAnalytics ${isFeedbackVisible ? 'expanded' : 'minimized'}`}>
       <WSNavBar />
- 
+
       <img className="InsightTitle" alt="" src="/WSInsightAnalytics_insight.png" />
       <b className="AnalyticsTitle">Analytics</b>
- 
+
       <div className="WSInsightBox" />
- 
+
       <div className="YearContainer">
         <div className="YearBox" />
         <span className='Year'>Year</span>
@@ -229,7 +228,7 @@ const barOptions = {
         <span className='_2024'>{currentYear}</span>
         <img className="arrow_right" alt="" src="/WsInsight_Rightbtn.png" onClick={incrementYear} />
       </div>
- 
+
       <div className="BarGraphContainer">
   <div className="BarBox" />
   <span className='MonthlyAccidentEventStats'>Reports Resolved vs. Unresolved by Month
@@ -242,8 +241,8 @@ const barOptions = {
             }} />
   </div>
 </div>
- 
- 
+
+
       <div className="PieChartContainer">
   <h3>Report Distribution by Status</h3>
   <Pie data={data} options={options} />
@@ -266,10 +265,10 @@ const barOptions = {
     </div>
   </div>
 </div>
- 
- 
- 
- 
+
+
+
+
       {isFeedbackVisible && (
         <>
           <div className={`FeedbackSection ${isFeedbackVisible ? 'visible' : 'hidden'}`}></div>
@@ -292,42 +291,40 @@ const barOptions = {
           </tr>
         </thead>
         <tbody>
-  {feedbackList.map((report, index) => (
-    <tr key={index}>
-      <td>{report.submittedAt ? new Date(report.submittedAt).toLocaleDateString() : '-'}</td>
-      <td>{report.location}</td>
-      <td>{report.reportType}</td>
-      <td
-        style={{
-          color:
-            report.status === 'PENDING'
-              ? '#F6C301'
-              : report.status === 'ACKNOWLEDGED'
-              ? '#4CAF50'
-              : report.status === 'IN_PROGRESS'
-              ? '#F44336'
-              : report.status === 'RESOLVED'
-              ? '#FF69B4'
-              : '#000',
-        }}
-      >
-        {report.status}
-      </td>
-      <td>
-        {report.resolvedAt 
-          ? new Date(report.resolvedAt).toLocaleDateString()
-          : '-'}
-      </td>
-    </tr>
-  ))}
-</tbody>
+          {feedbackList.map((feedback, index) => (
+            <tr key={index}>
+              <td>{format(new Date(feedback.submissionDate), 'yyyy-MM-dd')}</td>
+              <td>{feedback.location}</td>
+              <td>{feedback.reportCategory}</td>
+              <td
+                style={{
+                  color:
+                    feedback.status === 'PENDING'
+                      ? '#F6C301'
+                      : feedback.status === 'APPROVED'
+                      ? '#4CAF50'
+                      : feedback.status === 'DENIED'
+                      ? '#F44336'
+                      : '#000',
+                }}
+              >
+                {feedback.status}
+              </td>
+              <td>
+                {feedback.dateResolved
+                  ? format(new Date(feedback.dateResolved), 'yyyy-MM-dd')
+                  : '-'}
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   </div>
 </div>
         </>
       )}
- 
+
       <div className='ReportFeedbackContainer'>
         <span className='ReportFeedback'>Report Feedback</span>
         <img
@@ -340,5 +337,5 @@ const barOptions = {
     </div>
   );
 };
- 
+
 export default WSInsightAnalytics;

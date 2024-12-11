@@ -6,13 +6,11 @@ import EditSuccessfulDialog from "./EditSuccessfulDialog";
 import ErrorDialog from "./ErrorDialog";
 
 const AdProfile = () => {
-  // Added errorMessage state
   const [isEditable, setIsEditable] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // Added this line
   const [admin, setAdmin] = useState({});
   const [profilePicture, setProfilePicture] = useState("/default.png");
 
@@ -21,24 +19,15 @@ const AdProfile = () => {
     console.log("Logged in admin:", loggedInAdmin);
     if (loggedInAdmin) {
       setAdmin(loggedInAdmin);
-      fetch(`http://localhost:8080/api/profile/admin/getProfilePicture/${loggedInAdmin.adminId}`, {
-        credentials: 'include'
-      })
+      // Updated endpoint to match backend controller
+      fetch(`http://localhost:8080/api/profile/admin/getProfilePicture/${loggedInAdmin.adminId}`)
         .then(response => response.blob())
         .then(blob => {
           if (blob.size > 0) {
             setProfilePicture(URL.createObjectURL(blob));
           }
         })
-        .catch(error => {
-          console.error("Error fetching profile picture:", error);
-          setErrorMessage("Failed to load profile picture");
-          setShowErrorMessage(true);
-          setTimeout(() => {
-            setShowErrorMessage(false);
-            setErrorMessage("");
-          }, 3000);
-        });
+        .catch(error => console.error("Error fetching profile picture:", error));
     }
   }, []);
 
@@ -48,12 +37,12 @@ const AdProfile = () => {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("id", admin.adminId);
+    formData.append("id", admin.adminId); // Updated to match backend parameter name
 
     try {
+      // Updated endpoint to match backend controller
       const response = await fetch(`http://localhost:8080/api/profile/admin/uploadProfilePicture`, {
         method: "POST",
-        credentials: 'include',
         body: formData,
       });
 
@@ -64,24 +53,21 @@ const AdProfile = () => {
       const result = await response.json();
       console.log("Profile picture updated successfully:", result);
       
-      const pictureResponse = await fetch(
-        `http://localhost:8080/api/profile/admin/getProfilePicture/${admin.adminId}`,
-        { credentials: 'include' }
-      );
+      // Refresh the profile picture immediately after successful upload
+      const pictureResponse = await fetch(`http://localhost:8080/api/profile/admin/getProfilePicture/${admin.adminId}`);
       const pictureBlob = await pictureResponse.blob();
       const newProfilePictureUrl = URL.createObjectURL(pictureBlob);
       setProfilePicture(newProfilePictureUrl);
     } catch (error) {
       console.error("Error uploading profile picture:", error);
-      setErrorMessage("Failed to upload profile picture");
       setShowErrorMessage(true);
       setTimeout(() => {
         setShowErrorMessage(false);
-        setErrorMessage("");
       }, 3000);
     }
   };
 
+  // Rest of the component remains the same...
   const handleEditClick = () => {
     setIsEditable(true);
     setCurrentPassword("");
@@ -90,79 +76,44 @@ const AdProfile = () => {
 
   const handleUpdateClick = async () => {
     if (!currentPassword || !newPassword) {
-      setErrorMessage("Please fill in both password fields");
       setShowErrorMessage(true);
       setTimeout(() => {
         setShowErrorMessage(false);
-        setErrorMessage("");
       }, 3000);
       return;
     }
-  
+
     try {
-      // First, check if we have the admin object
-      if (!admin || !admin.adminId) {
-        setErrorMessage("User session not found. Please try logging in again.");
-        setShowErrorMessage(true);
-        return;
-      }
-  
-      console.log("Sending update request for admin ID:", admin.adminId);
-  
       const response = await fetch(`http://localhost:8080/admin/updatePassword?adminId=${admin.adminId}`, {
         method: "PUT",
-        credentials: 'include',
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
         },
         body: JSON.stringify({
-          currentPassword: currentPassword,
-          newPassword: newPassword
-        })
+          currentPassword,
+          newPassword,
+        }),
       });
-  
-      // Log the response for debugging
-      console.log("Response status:", response.status);
-      
-      const contentType = response.headers.get("content-type");
-      let data;
-      if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
-      } else {
-        data = await response.text();
-      }
-  
-      console.log("Response data:", data);
-  
+
       if (!response.ok) {
-        throw new Error(typeof data === 'string' ? data : data.message || 'Failed to update password');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
+      const result = await response.json();
+      console.log("Password updated successfully:", result);
+
       setIsEditable(false);
       setShowSuccessMessage(true);
-      setCurrentPassword("");
-      setNewPassword("");
-      
       setTimeout(() => {
         setShowSuccessMessage(false);
       }, 3000);
-  
     } catch (error) {
       console.error("Error updating password:", error);
-      setErrorMessage(error.message || "Failed to update password. Please try again.");
       setShowErrorMessage(true);
       setTimeout(() => {
         setShowErrorMessage(false);
-        setErrorMessage("");
       }, 3000);
     }
-  };
-
-  const handleCancelClick = () => {
-    setIsEditable(false);
-    setCurrentPassword("");
-    setNewPassword("");
   };
 
   return (
@@ -198,7 +149,7 @@ const AdProfile = () => {
         </div>
         <div className="password-container">
           <h1>Password</h1>
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form>
             <div>
               <label>Current Password</label>
               <input
@@ -206,7 +157,6 @@ const AdProfile = () => {
                 value={currentPassword}
                 readOnly={!isEditable}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder={isEditable ? "Enter current password" : "********"}
               />
             </div>
             <div>
@@ -216,7 +166,6 @@ const AdProfile = () => {
                 value={newPassword}
                 readOnly={!isEditable}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder={isEditable ? "Enter new password" : "********"}
               />
             </div>
             <div className="btn-container">
@@ -225,7 +174,7 @@ const AdProfile = () => {
                   <button type="button" className="update-btn" onClick={handleUpdateClick}>
                     Update
                   </button>
-                  <button type="button" className="cancel-btn" onClick={handleCancelClick}>
+                  <button type="button" className="cancel-btn" onClick={() => setIsEditable(false)}>
                     Cancel
                   </button>
                 </>
@@ -237,7 +186,7 @@ const AdProfile = () => {
             </div>
           </form>
           {showSuccessMessage && <EditSuccessfulDialog />}
-          {showErrorMessage && <ErrorDialog message={errorMessage} />}
+          {showErrorMessage && <ErrorDialog />}
         </div>
       </main>
     </div>

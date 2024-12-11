@@ -1,10 +1,10 @@
 import React from "react";
 import "./ErrorDialog.css";
 
-const ErrorDialog = ({ message }) => {
+const ErrorDialog = () => {
   return (
     <div className="error-dialog">
-      <p>{message || "An error occurred. Please try again."}</p>
+      <p>Error: Both fields must be filled out</p>
     </div>
   );
 };

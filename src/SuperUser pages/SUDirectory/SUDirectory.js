@@ -22,8 +22,6 @@ import SUNavBar from "../../components/SUNavBar";
 import './SUDirectory.css';
 
 const SUDirectory = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [category, setCategory] = useState('SuperUser');  // Default category
   const [statusFilter, setStatusFilter] = useState('All');
   const [tableData, setTableData] = useState([]);
@@ -132,12 +130,12 @@ const SUDirectory = () => {
     }
   };
 
-
+  // Fetch Admin Data
   const fetchAdminData = async () => {
     try {
       const response = await fetch('http://localhost:8080/admin/getAllAdmins');
       const data = await response.json();
-  
+
       const formattedData = data.map(admin => ({
         name: admin.fullName,
         idNumber: admin.idNumber,
@@ -145,19 +143,19 @@ const SUDirectory = () => {
         username: admin.adminname,
         status: admin.status,
       }));
-  
+
       setTableData(formattedData);
     } catch (error) {
       console.error('Error fetching admin data:', error);
-      setTableData([]);
     }
   };
-  
+
+  // Fetch SuperUser Data
   const fetchSuperUserData = async () => {
     try {
       const response = await fetch('http://localhost:8080/superuser/getAllSuperUsers');
       const data = await response.json();
-      
+
       const formattedData = data.map(superuser => ({
         name: superuser.fullName,
         idNumber: superuser.superUserIdNumber,
@@ -169,7 +167,6 @@ const SUDirectory = () => {
       setTableData(formattedData);
     } catch (error) {
       console.error('Error fetching superuser data:', error);
-      setTableData([]);
     }
   };
 
@@ -354,73 +351,53 @@ const SUDirectory = () => {
 
   // Submit form to create a new Admin, SuperUser, or Office
   const handleSubmit = async () => {
-    if (newAccount.password !== newAccount.confirmPassword) {
+    if (category !== 'Office' && newAccount.password !== newAccount.confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
-  
+
     let newEntry;
     let endpoint = '';
-  
+
     if (category === 'Admin') {
       newEntry = {
         fullName: newAccount.fullName,
-        adminname: newAccount.username,    // Match backend entity
+        adminname: newAccount.username,
         email: newAccount.email,
         idNumber: newAccount.idNumber,
         password: newAccount.password,
-        status: true,
+        status: true,  // Enabled by default
       };
       endpoint = 'http://localhost:8080/admin/insertAdmin';
     } else if (category === 'SuperUser') {
       newEntry = {
-        fullName: newAccount.fullName,
         superUsername: newAccount.username,
+        fullName: newAccount.fullName,
         email: newAccount.email,
         superUserIdNumber: newAccount.idNumber,
         superUserPassword: newAccount.password,
-        status: true,
+        status: true,  // Enabled by default
       };
       endpoint = 'http://localhost:8080/superuser/insertSuperUser';
     }
-  
+
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newEntry)
+        body: JSON.stringify(newEntry),
       });
-  
+
       if (response.ok) {
-        // Show success message
-        alert(`${category} account created successfully!`);
-        
-        // Refresh the data after successful creation
-        if (category === 'Admin') {
-          fetchAdminData();
-        } else if (category === 'SuperUser') {
-          fetchSuperUserData();
-        }
-        setShowForm(false);
-        
-        // Clear form
-        setNewAccount({
-          fullName: '',
-          email: '',
-          username: '',
-          idNumber: '',
-          password: '',
-          confirmPassword: '',
-        });
+        const createdEntry = await response.json();
+        setTableData([...tableData, createdEntry]);
+        setShowForm(false);  // Close the modal
       } else {
-        const errorData = await response.text();
-        alert(`Failed to create ${category} account: ${errorData}`);
-        console.error(`Failed to create ${category} in the backend:`, errorData);
+        console.error(`Failed to create ${category} in the backend.`);
       }
     } catch (error) {
-      alert(`Error creating ${category} account. Please try again.`);
       console.error(`Error creating ${category}:`, error);
     }
   };

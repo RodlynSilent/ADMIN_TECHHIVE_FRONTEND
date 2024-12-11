@@ -449,16 +449,10 @@ light.color : 'transparent',
           userRole: loggedInUser.role || 'USER'
         }
       });
-  
-      // Update the specific post's data in the state
-      setPosts(prevPosts => prevPosts.map(post => 
-        post.postId === postId ? {
-          ...post,
-          likes: response.data.likes,
-          dislikes: response.data.dislikes,
-          likedBy: response.data.likedBy || [],
-          dislikedBy: response.data.dislikedBy || []
-        } : post
+
+      const updatedPost = response.data;
+      setPosts(posts.map(post =>
+        post.postId === postId ? updatedPost : post
       ));
     } catch (error) {
       console.error("Error liking post:", error);
@@ -467,7 +461,7 @@ light.color : 'transparent',
       }
     }
   };
-  
+
   const handleDislike = async (postId) => {
     if (!loggedInUser) {
       alert("Please log in to dislike posts.");
@@ -480,16 +474,10 @@ light.color : 'transparent',
           userRole: loggedInUser.role || 'USER'
         }
       });
-  
-      // Update the specific post's data in the state
-      setPosts(prevPosts => prevPosts.map(post => 
-        post.postId === postId ? {
-          ...post,
-          likes: response.data.likes,
-          dislikes: response.data.dislikes,
-          likedBy: response.data.likedBy || [],
-          dislikedBy: response.data.dislikedBy || []
-        } : post
+
+      const updatedPost = response.data;
+      setPosts(posts.map(post =>
+        post.postId === postId ? updatedPost : post
       ));
     } catch (error) {
       console.error("Error disliking post:", error);
