@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import moment from 'moment';
+import TrafficLights from '../../components/TrafficLights';
 import SUNavBar from "../../components/SUNavBar";
 import "./SUHome.css";
 
