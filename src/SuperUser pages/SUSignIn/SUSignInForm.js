@@ -52,14 +52,16 @@ export default function SUSignInForm() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),
             });
+    
+            const data = await response.text();
+            
             if (response.ok) {
                 setShowForgotPassword(false);
                 setShowVerificationPopup(true);
                 setCountdown(30);
                 showModal("Reset code sent to your email.", "success");
             } else {
-                const message = await response.text();
-                showModal(`Failed to send reset code: ${message}`, "error");
+                showModal(data || "Failed to send reset code", "error");
             }
         } catch (error) {
             console.error("Error sending reset code:", error);
@@ -77,19 +79,20 @@ export default function SUSignInForm() {
     // Verify reset code
     const handleVerifyCode = async () => {
         try {
-            const response = await fetch('http://localhost:8080/superuser/verifyResetCode', {
+            const response = await fetch('http://localhost:8080/superuser/validateResetCode', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, resetCode: verificationCode }),
             });
-
+    
+            const data = await response.text();
+    
             if (response.ok) {
                 setShowVerificationPopup(false);
                 setShowResetPasswordPopup(true);
                 showModal("Code verified. Enter your new password.", "success");
             } else {
-                const message = await response.text();
-                showModal(`Verification failed: ${message}`, "error");
+                showModal(data || "Verification failed", "error");
             }
         } catch (error) {
             console.error("Error verifying code:", error);
@@ -109,6 +112,9 @@ export default function SUSignInForm() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, newPassword }),
             });
+    
+            const data = await response.text();
+    
             if (response.ok) {
                 setShowResetPasswordPopup(false);
                 setEmail("");
@@ -116,8 +122,7 @@ export default function SUSignInForm() {
                 setConfirmPassword("");
                 showModal("Password reset successfully!", "success");
             } else {
-                const message = await response.text();
-                showModal(`Failed to reset password: ${message}`, "error");
+                showModal(data || "Failed to reset password", "error");
             }
         } catch (error) {
             console.error("Error resetting password:", error);
@@ -129,31 +134,34 @@ export default function SUSignInForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch('http://localhost:8080/superuser/signin', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include', // Important for session cookies
-                body: JSON.stringify({
-                    superUserIdNumber: idNumber,
-                    superUserPassword: password,
-                }),
-            });
-
-            if (response.ok) {
-                // Store minimal data, let session handle auth
-                sessionStorage.setItem('userRole', 'SUPER_USER');
-                navigate("/SUhome");
-            } else {
-                const message = await response.text();
-                showModal(`Login failed: ${message}`, "error");
-            }
+          const response = await fetch("http://localhost:8080/superuser/signin", {
+            method: "POST",
+            credentials: 'include',  // Important for session cookies
+            headers: { 
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({ 
+              superUserIdNumber: idNumber,
+              superUserPassword: password 
+            }),
+          });
+      
+          if (response.ok) {
+            const data = await response.json();
+            // Store both the user data and the session information
+            localStorage.setItem("loggedInSuperUser", JSON.stringify(data));
+            localStorage.setItem("sessionId", data.sessionId);
+            navigate("/suhome");
+          } else {
+            const message = await response.text();
+            showModal(`Login failed: ${message}`, "error");
+          }
         } catch (error) {
-            console.error("Error during login:", error);
-            showModal("An error occurred. Please try again.", "error");
+          console.error("Error:", error);
+          showModal("An error occurred. Please try again.", "error");
         }
-    };
+      };
 
     return (
         <>
@@ -233,35 +241,34 @@ export default function SUSignInForm() {
                 </div>
             )}
 
-            {showResetPasswordPopup && (
-                <div className="reset-password-popup">
-                    <div className="popup-content">
-                        <h2>Enter New Password</h2>
-                        <label>
-                            New Password
-                            <input
-                                type="password"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                required
-                            />
-                        </label>
-                        <br />
-                        <label>
-                            Confirm Password
-                            <input
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                            />
-                        </label>
-                        <br />
-                        <button onClick={handleResetPassword}>Reset Password</button>
-                    </div>
-                </div>
-            )}
-
+{showResetPasswordPopup && (
+    <div className="reset-password-popup">
+        <div className="popup-content">
+            <h2>Enter New Password</h2>
+            <div className="password-input-group">
+                <label>
+                    New Password
+                    <input
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        required
+                    />
+                </label>
+                <label>
+                    Confirm Password
+                    <input
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                    />
+                </label>
+            </div>
+            <button onClick={handleResetPassword}>Reset Password</button>
+        </div>
+    </div>
+)}
             {modalMessage && (
                 <div className={`modal ${modalType}`}>
                     <p>{modalMessage}</p>

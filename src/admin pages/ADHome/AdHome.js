@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
-import moment from 'moment';
 import AdNavBar from "../../components/AdNavBar";
 import "./AdHome.css";
 import TrafficLights from "../../components/TrafficLights";
+import moment from 'moment-timezone';
 
 const AdHome = () => {
   const [newPostContent, setNewPostContent] = useState("");
@@ -24,7 +24,9 @@ const AdHome = () => {
   const [adminProfilePictures, setAdminProfilePictures] = useState({});
   const [superUserProfilePictures, setSuperUserProfilePictures] = useState({});
   const [showCloseButton, setShowCloseButton] = useState(false);
-  const defaultProfile = '/default.png';
+  const [profilePicture, setProfilePicture] = useState(null);  // Add this line
+  const defaultProfile = '/dp.png';
+  const [reportStatuses, setReportStatuses] = useState({});
 
   const fileInputRef = useRef(null);
 
@@ -42,22 +44,57 @@ const AdHome = () => {
     return `http://localhost:8080${post.image}`;
   };
 
+  const fetchProfilePicture = useCallback(async (adminId) => {
+    if (!adminId) return;
+    try {
+      const response = await fetch(`http://localhost:8080/admin/profile/getProfilePicture/${adminId}`);
+      if (response.ok) {
+        const imageBlob = await response.blob();
+        if (imageBlob.size > 0) {
+          const imageUrl = URL.createObjectURL(imageBlob);
+          setProfilePicture(imageUrl);
+        } else {
+          setProfilePicture(defaultProfile);
+        }
+      } else {
+        setProfilePicture(defaultProfile);
+      }
+    } catch (error) {
+      console.error('Failed to fetch profile picture:', error);
+      setProfilePicture(defaultProfile);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchLoggedInAdmin = async () => {
       try {
         const storedAdmin = JSON.parse(localStorage.getItem("loggedInAdmin"));
-        if (!storedAdmin?.adminname) return;
+        if (!storedAdmin) {
+          console.log("No stored admin found");
+          return;
+        }
+        
+        // First set the stored data immediately to allow basic functionality
+        setLoggedInAdmin(storedAdmin);
+        
+        // Then fetch fresh data from the server
         const response = await axios.get(`http://localhost:8080/admin/getByAdminname?adminname=${storedAdmin.adminname}`);
         const adminData = response.data;
         if (adminData?.adminId) {
           setLoggedInAdmin(adminData);
+          fetchProfilePicture(adminData.adminId);
         }
       } catch (error) {
         console.error("Error fetching admin data:", error);
+        // On error, at least keep the stored data
+        const storedAdmin = JSON.parse(localStorage.getItem("loggedInAdmin"));
+        if (storedAdmin) {
+          setLoggedInAdmin(storedAdmin);
+        }
       }
     };
     fetchLoggedInAdmin();
-  }, []);
+  }, [fetchProfilePicture]);
 
   useEffect(() => {
     const fetchLoggedInSuperUser = async () => {
@@ -118,19 +155,25 @@ const AdHome = () => {
       try {
         const response = await axios.get("http://localhost:8080/posts/visible");
         if (response.data) {
-          console.log('Raw posts data:', response.data); // Debug log
+          console.log('Fetched posts:', response.data);
           const processedPosts = response.data.map(post => {
-            console.log('Individual post:', post); // Debug each post
-            console.log('isSubmittedReport:', post.isSubmittedReport);
-            console.log('status:', post.status);
+            const timestamp = moment(post.timestamp, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
+            
+            // Debug log
+            if (post.isSubmittedReport) {
+              console.log('Found submitted report post:', post.postId);
+              fetchReportStatus(post.postId);
+            }
+  
             return {
               ...post,
               image: post.image ? getPostImage(post) : null,
-              timestamp: moment(post.timestamp).local()
+              timestamp: timestamp
             };
           });
+          
           const sortedPosts = processedPosts.sort((a, b) => 
-            new Date(b.timestamp) - new Date(a.timestamp)
+            b.timestamp - a.timestamp
           );
           setPosts(sortedPosts);
         }
@@ -196,17 +239,17 @@ const AdHome = () => {
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!newPostContent && !imagePreview) {
       alert("Please enter a post or select a picture before submitting.");
       return;
     }
-
+  
     if (!loggedInAdmin) {
       alert("Please log in to post.");
       return;
     }
-
+  
     const newPost = {
       content: newPostContent,
       image: imagePreview,
@@ -218,19 +261,21 @@ const AdHome = () => {
       dislikes: 0,
       userRole: "ADMIN"
     };
-
+  
     try {
       const response = await axios.post("http://localhost:8080/posts/add", newPost, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-
+  
+      // Process the timestamp before adding to state
       const createdPost = {
         ...response.data,
-        image: response.data.image ? getPostImage(response.data) : null
+        image: response.data.image ? getPostImage(response.data) : null,
+        timestamp: moment(response.data.timestamp, 'YYYY-MM-DD HH:mm:ss.SSSSSS')
       };
-
+  
       setPosts(prevPosts => [createdPost, ...prevPosts]);
       setNewPostContent("");
       setSelectedFile(null);
@@ -243,40 +288,101 @@ const AdHome = () => {
 
   const handleLike = async (postId) => {
     try {
-      const response = await axios.post(`http://localhost:8080/posts/${postId}/like`, {}, {
-        params: {
-          userId: loggedInAdmin?.adminId || loggedInSuperUser?.superuserId,
-          userRole: loggedInAdmin ? "ADMIN" : "SUPERUSER"
+      if (!loggedInAdmin && !loggedInSuperUser) {
+        alert("Please log in to like posts.");
+        return;
+      }
+  
+      const userId = loggedInAdmin?.adminId || loggedInSuperUser?.superuserId;
+      const userRole = loggedInAdmin ? "ADMIN" : "SUPERUSER";
+  
+      console.log("Sending like request with:", { postId, userId, userRole }); // Debug log
+  
+      const response = await axios.post(
+        `http://localhost:8080/posts/${postId}/like`,
+        {},  // Empty body
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          params: {
+            userId: userId,
+            userRole: userRole
+          }
         }
-      });
-      const updatedPost = {
-        ...response.data,
-        image: response.data.image ? getPostImage(response.data) : null
-      };
-      setPosts(posts.map(post => post.postId === postId ? updatedPost : post));
+      );
+  
+      console.log("Like response:", response.data); // Debug log
+  
+      if (response.data) {
+        setPosts(prevPosts =>
+          prevPosts.map(post =>
+            post.postId === postId
+              ? {
+                  ...post,
+                  likes: response.data.likes,
+                  dislikes: response.data.dislikes,
+                  likedBy: response.data.likedBy || [],
+                  dislikedBy: response.data.dislikedBy || []
+                }
+              : post
+          )
+        );
+      }
     } catch (error) {
-      console.error("Error liking post:", error);
+      console.error("Like error details:", error);
+      alert("Failed to like post. Please try again.");
     }
   };
   
   const handleDislike = async (postId) => {
     try {
-      const response = await axios.post(`http://localhost:8080/posts/${postId}/dislike`, {}, {
-        params: {
-          userId: loggedInAdmin?.adminId || loggedInSuperUser?.superuserId,
-          userRole: loggedInAdmin ? "ADMIN" : "SUPERUSER"
+      if (!loggedInAdmin && !loggedInSuperUser) {
+        alert("Please log in to dislike posts.");
+        return;
+      }
+  
+      const userId = loggedInAdmin?.adminId || loggedInSuperUser?.superuserId;
+      const userRole = loggedInAdmin ? "ADMIN" : "SUPERUSER";
+  
+      console.log("Sending dislike request with:", { postId, userId, userRole }); // Debug log
+  
+      const response = await axios.post(
+        `http://localhost:8080/posts/${postId}/dislike`,
+        {},  // Empty body
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          params: {
+            userId: userId,
+            userRole: userRole
+          }
         }
-      });
-      const updatedPost = {
-        ...response.data,
-        image: response.data.image ? getPostImage(response.data) : null
-      };
-      setPosts(posts.map(post => post.postId === postId ? updatedPost : post));
+      );
+  
+      console.log("Dislike response:", response.data); // Debug log
+  
+      if (response.data) {
+        setPosts(prevPosts =>
+          prevPosts.map(post =>
+            post.postId === postId
+              ? {
+                  ...post,
+                  likes: response.data.likes,
+                  dislikes: response.data.dislikes,
+                  likedBy: response.data.likedBy || [],
+                  dislikedBy: response.data.dislikedBy || []
+                }
+              : post
+          )
+        );
+      }
     } catch (error) {
-      console.error("Error disliking post:", error);
+      console.error("Dislike error details:", error);
+      alert("Failed to dislike post. Please try again.");
     }
   };
-
   const handleOpenComments = async (postId) => {
     setCurrentPostId(postId);
     try {
@@ -284,18 +390,35 @@ const AdHome = () => {
         axios.get(`http://localhost:8080/comments/${postId}`),
         axios.get(`http://localhost:8080/posts/${postId}`)
       ]);
-      const sortedComments = commentsResponse.data
+  
+      console.log('Comments received:', commentsResponse.data); // Debug log
+  
+      const activeComments = commentsResponse.data
+        .filter(comment => !comment.isDeleted)
         .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
         .map(comment => ({
           ...comment,
+          // Ensure these fields are properly mapped
+          fullname: comment.fullname,
+          idnumber: comment.idnumber,
+          timestamp: comment.timestamp,
           relativeTime: moment(comment.timestamp).fromNow()
         }));
-      setComments(sortedComments);
+  
+      console.log('Processed comments:', activeComments); // Debug log
+  
+      setComments(activeComments);
       setCurrentPostOwner(postResponse.data.adminId);
+      setIsCommentDialogOpen(true);
     } catch (error) {
       console.error("Error fetching comments or post details:", error);
+      if (error.response) {
+        console.error("Response status:", error.response.status);
+        console.error("Response data:", error.response.data);
+      }
+      setIsCommentDialogOpen(false);
+      alert("Error loading comments. Please try again.");
     }
-    setIsCommentDialogOpen(true);
   };
 
   const handleCloseComments = () => {
@@ -305,25 +428,37 @@ const AdHome = () => {
 
   const handleAddComment = async () => {
     if (newComment.trim() === '') return;
-
+  
+    if (!loggedInAdmin) {
+      alert("Please log in to comment.");
+      return;
+    }
+  
+    // Don't send timestamp from frontend, let backend handle it
     const comment = {
       content: newComment,
       postId: currentPostId,
       adminId: loggedInAdmin.adminId,
-      fullname: loggedInAdmin.fullname,
-      idnumber: loggedInAdmin.idnumber,
+      fullName: loggedInAdmin.fullname,
+      idNumber: loggedInAdmin.idnumber,
+      userRole: "ADMIN"
     };
-
+  
     try {
       const response = await axios.post('http://localhost:8080/comments/add', comment);
-      const newCommentWithRelativeTime = {
+      console.log('Server response:', response.data);
+  
+      const processedComment = {
         ...response.data,
-        relativeTime: moment(response.data.timestamp).fromNow()
+        timestamp: response.data.timestamp,
+        relativeTime: moment(response.data.timestamp).format('MMMM D YYYY, h:mm A')
       };
-      setComments(prevComments => [newCommentWithRelativeTime, ...prevComments]);
+  
+      setComments(prevComments => [processedComment, ...prevComments]);
       setNewComment('');
     } catch (error) {
       console.error("Error adding comment:", error);
+      alert("Failed to add comment. Please try again.");
     }
   };
 
@@ -374,13 +509,35 @@ const AdHome = () => {
     }
   };
 
+  // Update timestamp formatting functions
   const formatTimestamp = (timestamp) => {
+    if (!timestamp) return 'No date';
+    
+    // Try parsing with moment
     const momentDate = moment(timestamp);
-    return momentDate.local().format('dddd, MMMM D, YYYY [at] h:mm A');
+    if (!momentDate.isValid()) {
+      // If moment parsing fails, try as ISO string
+      const date = new Date(timestamp);
+      if (isNaN(date.getTime())) {
+        return 'Invalid date';
+      }
+      return date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      });
+    }
+    return momentDate.format('dddd, MMMM D, YYYY [at] h:mm A');
   };
   
   const getRelativeTime = (timestamp) => {
-    return moment(timestamp).local().fromNow();
+    if (!timestamp) return '';
+    const momentDate = moment(timestamp);
+    return momentDate.isValid() ? momentDate.fromNow() : '';
   };
 
   const handleClosePost = () => {
@@ -401,21 +558,14 @@ const AdHome = () => {
 
       <div className="content-wrapper">
         <div className="post-container">
+            <div className="logo-container">
+            <img
+              src={profilePicture || defaultProfile}
+              alt="Admin Avatar"
+              className="admins-dp"
+            />
+          </div>
           <div className="post-form">
-            <div className="profile-picture-wrapper">
-              <img
-                src={
-                  loggedInAdmin
-                    ? adminProfilePictures[loggedInAdmin.adminId] || defaultProfile
-                    : loggedInSuperUser
-                    ? superUserProfilePictures[loggedInSuperUser.superuserId] || defaultProfile
-                    : defaultProfile
-                }
-                alt="Profile"
-                className="profile-picture"
-              />
-            </div>
-
             <form onSubmit={handlePostSubmit}>
               <div className="input-container">
                 <input
@@ -484,45 +634,71 @@ const AdHome = () => {
         </div>
 
         <div className="post-list">
-          {posts.map((post) => (
-            <div key={post.postId} className="post-card">
-              <div className="card-container" style={{ position: 'relative' }}>
-              {post.isSubmittedReport && post.status && (loggedInAdmin || loggedInSuperUser) && (
-   <div className="traffic-light-container">
-   <TrafficLights 
-     status={post.status} // This will be mapped inside TrafficLights component
-     isClickable={false}
-     onChange={() => {}} // Empty function since it's not clickable
-   />
- </div>
+        {posts.map((post) => (
+          <div key={post.postId} className="post-card">
+            <div className="card-container" style={{ position: 'relative' }}>
+              {console.log('Post data:', post)}
+              {post.isSubmittedReport && post.status && (
+  <div className="adhometraffic-light-container" style={{
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    zIndex: 10,
+    display: 'flex'
+  }}>
+    {console.log('Rendering traffic light for post:', post.postId, 'Status:', post.status)}
+    <TrafficLights 
+      status={getTrafficLightStatus(post.status)}
+      isClickable={false}
+      onChange={() => {}}
+    />
+  </div>
 )}
 
-                <div className="name-container">
-                  <img
-                    src={
-                      post.adminId
-                        ? adminProfilePictures[post.adminId] || defaultProfile
-                        : superUserProfilePictures[post.superuserId] || defaultProfile
-                    }
-                    alt="Profile Avatar"
-                    className="admins-dp"
-                  />
-                  <h5>{post.fullname} ({post.idnumber})</h5>
-                  {loggedInAdmin && loggedInAdmin.adminId === post.adminId && (
-                    <img
-                      src="/delete.png"
-                      alt="Delete"
-                      className="delete-icon"
-                      onClick={() => handleDeletePost(post.postId)}
-                      style={{ cursor: 'pointer', width: '20px', height: '20px', marginLeft: 'auto' }}
-                    />
-                  )}
-                </div>
-                <div className="timestamp">
-                  <span className="formatted-date">{formatTimestamp(post.timestamp)}</span>
-                  <br />
-                  <span className="relative-time">{getRelativeTime(post.timestamp)}</span>
-                </div>
+<div className="name-container">
+          <img
+            src={
+              post.adminId
+                ? adminProfilePictures[post.adminId] || defaultProfile
+                : superUserProfilePictures[post.superuserId] || defaultProfile
+            }
+            alt="Profile Avatar"
+            className="admins-dp"
+          />
+          {/* Modified this part to ensure fullName and idNumber display */}
+          <h5>
+            {post.fullName || post.fullname} 
+            {post.idNumber || post.idnumber ? ` (${post.idNumber || post.idnumber})` : ''}
+          </h5>
+          {loggedInAdmin && loggedInAdmin.adminId === post.adminId && (
+            <img
+              src="/delete.png"
+              alt="Delete"
+              className="delete-icon"
+              onClick={() => handleDeletePost(post.postId)}
+              style={{ cursor: 'pointer', width: '20px', height: '20px', marginLeft: 'auto' }}
+            />
+          )}
+        </div>
+
+                {/* Modified timestamp display */}
+                <div className="timestamp" style={{ marginBottom: '10px', color: '#666' }}>
+  <div className="formatted-date" style={{ fontSize: '14px' }}>
+    {new Date(post.timestamp).toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    })}
+  </div>
+  <div className="relative-time" style={{ fontSize: '12px', color: '#888' }}>
+    {moment(post.timestamp).fromNow()}
+  </div>
+</div>
+
                 <div className="card-contents">
                   <p>{post.content}</p>
                   {post.image && (
@@ -577,31 +753,42 @@ const AdHome = () => {
           />
         </DialogTitle>
         <DialogContent>
-          {comments.map((comment) => (
-            <div key={comment.commentId} className="comment">
-              <div className="comment-header">
-                <div className="admin-info-container">
-                  <span className="admin-info">
-                    {comment.fullname} ({comment.idnumber})
-                  </span>
-                  {(loggedInAdmin && (loggedInAdmin.adminId === comment.adminId || loggedInAdmin.adminId === currentPostOwner)) && (
-                    <img
-                      src="/delete.png"
-                      alt="Delete"
-                      className="delete-icon"
-                      onClick={() => handleDeleteComment(comment.commentId, comment.adminId)}
-                    />
-                  )}
-                </div>
-                <div className="timestamp-container">
-                  <span className="formatted-time">{formatTimestamp(comment.timestamp)}</span>
-                  <span className="relative-time">{comment.relativeTime}</span>
-                </div>
-              </div>
-              <p>{comment.content}</p>
-            </div>
-          ))}
-        </DialogContent>
+        {comments.map((comment) => (
+  <div key={comment.commentId} className="comment">
+    <div className="comment-header">
+      <div className="admin-info-container">
+        <span className="admin-info">
+          {comment.fullName} 
+          {comment.idNumber && ` (${comment.idNumber})`}
+        </span>
+        {(loggedInAdmin && (loggedInAdmin.adminId === comment.adminId || loggedInAdmin.adminId === currentPostOwner)) && (
+          <img
+            src="/delete.png"
+            alt="Delete"
+            className="delete-icon"
+            onClick={() => handleDeleteComment(comment.commentId, comment.adminId)}
+          />
+        )}
+      </div>
+      <div className="timestamp-container" style={{ fontSize: '12px', color: '#666' }}>
+  {comment.timestamp && (
+    <>
+      <div style={{ marginBottom: '2px' }}>
+        {moment(comment.timestamp)
+          .utcOffset(480) // +8 hours for Manila
+          .format('dddd, MMMM D, YYYY [at] h:mm A')}
+      </div>
+      <div style={{ color: '#888' }}>
+        ({moment(comment.timestamp).utcOffset(480).fromNow()})
+      </div>
+    </>
+  )}
+</div>
+    </div>
+    <p>{comment.content}</p>
+  </div>
+))}
+</DialogContent>
         <DialogActions>
           <div className="add-comment" style={{ display: 'flex', width: '100%', padding: '10px' }}>
             <input

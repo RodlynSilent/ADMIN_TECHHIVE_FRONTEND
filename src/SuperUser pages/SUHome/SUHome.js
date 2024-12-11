@@ -2,15 +2,9 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
-import Loadable from 'react-loadable';
 import moment from 'moment';
 import SUNavBar from "../../components/SUNavBar";
 import "./SUHome.css";
-
-const SUComment = Loadable({
-    loader: () => import('./SUComment'),
-    loading: () => <div>Loading...</div>,
-});
 
 const SUHome = () => {
     const navigate = useNavigate();
@@ -30,7 +24,7 @@ const SUHome = () => {
     const [itemToDelete, setItemToDelete] = useState(null);
     const [profilePicture, setProfilePicture] = useState(null);
     const [superuserProfilePictures, setSuperUserProfilePictures] = useState({});
-    const defaultProfile = '/dp.png';
+    const defaultProfile = '/default.png';
     const [inputHasContent, setInputHasContent] = useState(false);
     const [showCancelButton, setShowCancelButton] = useState(false);
     const [showCloseButton, setShowCloseButton] = useState(false);
@@ -55,23 +49,31 @@ const SUHome = () => {
         };
         fetchLoggedInSuperUser();    
     }, []);
-  
 
     const fetchSuperUserProfilePicture = useCallback(async (superuserId) => {
-      try {
-          const response = await fetch(`http://localhost:8080/superuser/profile/getProfilePicture/${superuserId}`);
-          if (response.ok) {
-              const imageBlob = await response.blob();
-              const imageUrl = URL.createObjectURL(imageBlob);
-              setSuperUserProfilePictures(prev => ({ ...prev, [superuserId]: imageUrl }));
-          } else {
-              setSuperUserProfilePictures(prev => ({ ...prev, [superuserId]: defaultProfile }));
-          }
-      } catch (error) {
-          console.error('Failed to fetch superuser profile picture:', error);
-          setSuperUserProfilePictures(prev => ({ ...prev, [superuserId]: defaultProfile }));
-      }
-  }, []);
+        // Ensure superuserId is valid before making the request
+        if (!superuserId || superuserId <= 0) {
+            console.warn(`Invalid superuserId: ${superuserId}. Using default profile.`);
+            setSuperUserProfilePictures(prev => ({ ...prev, [superuserId]: defaultProfile }));
+            return;
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:8080/superuser/profile/getProfilePicture/${superuserId}`);
+            if (response.ok) {
+                const imageBlob = await response.blob();
+                const imageUrl = URL.createObjectURL(imageBlob);
+                setSuperUserProfilePictures(prev => ({ ...prev, [superuserId]: imageUrl }));
+            } else {
+                console.warn(`Profile picture not found for superuserId: ${superuserId}. Using default profile.`);
+                setSuperUserProfilePictures(prev => ({ ...prev, [superuserId]: defaultProfile }));
+            }
+        } catch (error) {
+            console.error(`Failed to fetch superuser profile picture for ID: ${superuserId}`, error);
+            setSuperUserProfilePictures(prev => ({ ...prev, [superuserId]: defaultProfile }));
+        }
+    }, []);
+    
 
   useEffect(() => {
     const fetchPostsAndPictures = async () => {
@@ -204,14 +206,17 @@ const SUHome = () => {
     
       // Log the post data before sending it
       const newPost = {
-          content: newPostContent,
-          image: imagePreview,
-          superUserId: loggedInSuperUser.superuserId, // Ensure this is set
-          fullName: loggedInSuperUser.fullName,
-          idNumber: loggedInSuperUser.superuseridNumber,
-          likes: 0,
-          dislikes: 0,
-      };
+        content: newPostContent,
+        image: imagePreview,
+        superUserId: loggedInSuperUser.superuserId,
+        fullName: loggedInSuperUser.fullName,
+        idNumber: loggedInSuperUser.superuseridNumber,
+        userRole: "SUPERUSER",  // Add this
+        likes: 0,
+        dislikes: 0,
+        isVisible: true,  // Add this
+        isVerified: false  // Add this
+    };
     
       console.log("Post Data:", newPost); // Log the data to be sent
   
@@ -236,47 +241,130 @@ const SUHome = () => {
     }
   };
   
-    const handleLike = async (postId) => {
-        if (!loggedInSuperUser) {
-            alert("Please log in to like posts.");
-            return;
-        }
-        try {
-            const response = await axios.post(`http://localhost:8080/posts/${postId}/like`, {}, {
-                params: {
-                    userId: loggedInSuperUser.superuserId, // Send superuser ID
-                    isAdmin: false // Indicates this is a superuser action
-                }
-            });
-            const updatedPost = response.data;
-            setPosts(posts.map(post =>
-                post.postId === postId ? updatedPost : post
-            ));
-        } catch (error) {
-            console.error("Error liking post:", error);
-        }
-    };
+  const handleLike = async (postId) => {
+    if (!loggedInSuperUser) {
+        alert("Please log in to like posts.");
+        return;
+    }
+    try {
+        // First handle the post like
+        const response = await axios.post(`http://localhost:8080/posts/${postId}/like`, {}, {
+            params: {
+                userId: loggedInSuperUser.superuserId,
+                userRole: "SUPERUSER"
+            }
+        });
+        const updatedPost = response.data;
 
-    const handleDislike = async (postId) => {
-        if (!loggedInSuperUser) {
-            alert("Please log in to dislike posts.");
-            return;
+        // If this is a report post and there's a userId, update their points with 10 points
+        if (updatedPost.userId && updatedPost.isSubmittedReport) {
+            try {
+                await axios.post(`/api/leaderboard/addPoints`, {}, {
+                    params: {
+                        userId: updatedPost.userId,
+                        points: 10  // Changed to 10 points for report posts
+                    }
+                });
+            } catch (error) {
+                console.error("Error updating user points:", error);
+            }
+        } else if (updatedPost.userId) {
+            // Regular post gets 5 points
+            try {
+                await axios.post(`/api/leaderboard/addPoints`, {}, {
+                    params: {
+                        userId: updatedPost.userId,
+                        points: 5
+                    }
+                });
+            } catch (error) {
+                console.error("Error updating user points:", error);
+            }
         }
-        try {
-            const response = await axios.post(`http://localhost:8080/posts/${postId}/dislike`, {}, {
-                params: {
-                    userId: loggedInSuperUser.superuserId, // Send superuser ID
-                    isAdmin: false // Indicates this is a superuser action
-                }
-            });
-            const updatedPost = response.data;
-            setPosts(posts.map(post =>
-                post.postId === postId ? updatedPost : post
-            ));
-        } catch (error) {
-            console.error("Error disliking post:", error);
+
+        setPosts(posts.map(post =>
+            post.postId === postId ? updatedPost : post
+        ));
+    } catch (error) {
+        console.error("Error liking post:", error);
+    }
+};
+
+
+const handleDislike = async (postId) => {
+    if (!loggedInSuperUser) {
+        alert("Please log in to dislike posts.");
+        return;
+    }
+    try {
+        // First handle the post dislike
+        const response = await axios.post(`http://localhost:8080/posts/${postId}/dislike`, {}, {
+            params: {
+                userId: loggedInSuperUser.superuserId,
+                userRole: "SUPERUSER"
+            }
+        });
+        const updatedPost = response.data;
+
+        // If this is a report post and there's a userId, update their points with -10 points
+        if (updatedPost.userId && updatedPost.isSubmittedReport) {
+            try {
+                await axios.post('/api/leaderboard/subtractPoints', {}, {
+                    params: {
+                        userId: updatedPost.userId,
+                        points: 10  // Changed to 10 points for report posts
+                    }
+                });
+            } catch (error) {
+                console.error("Error updating user points:", error);
+            }
+        } else if (updatedPost.userId) {
+            // Regular post gets -5 points
+            try {
+                await axios.post('/api/leaderboard/subtractPoints', {}, {
+                    params: {
+                        userId: updatedPost.userId,
+                        points: 5
+                    }
+                });
+            } catch (error) {
+                console.error("Error updating user points:", error);
+            }
         }
-    };
+
+        setPosts(posts.map(post =>
+            post.postId === postId ? updatedPost : post
+        ));
+    } catch (error) {
+        console.error("Error disliking post:", error);
+    }
+};
+
+const handleRemoveLike = async (postId, userId, isReport) => {
+    try {
+        await axios.post(`/api/leaderboard/subtractPoints`, {}, {
+            params: {
+                userId: userId,
+                points: isReport ? 10 : 5
+            }
+        });
+    } catch (error) {
+        console.error("Error removing points for like:", error);
+    }
+};
+
+const handleRemoveDislike = async (postId, userId, isReport) => {
+    try {
+        await axios.post(`/api/leaderboard/addPoints`, {}, {
+            params: {
+                userId: userId,
+                points: isReport ? 10 : 5
+            }
+        });
+    } catch (error) {
+        console.error("Error removing points for dislike:", error);
+    }
+};
 
     const handleOpenComments = async (postId) => {
       setCurrentPostId(postId);
@@ -305,42 +393,46 @@ const SUHome = () => {
 };
 
 const handleAddComment = async () => {
-    if (newComment.trim() === '') return;
-
-    if (!loggedInSuperUser || !loggedInSuperUser.superuserId) {
-        alert("SuperUser must be logged in to comment.");
+    if (newComment.trim() === '' || !loggedInSuperUser) {
+        alert("Please log in to add a comment");
         return;
     }
+
+    // Get the correct ID number
+    const idNumber = loggedInSuperUser.superuseridNumber || '21-1047-222';
 
     const comment = {
         content: newComment,
         postId: currentPostId,
-        superUserId: loggedInSuperUser.superuserId,  // Ensure this is set
+        superUserId: loggedInSuperUser.superuserId,
         fullName: loggedInSuperUser.fullName,
-        idNumber: loggedInSuperUser.idNumber,  // Correct the id number field
-        timestamp: new Date().toISOString()  // Ensure correct timestamp format
+        idNumber: idNumber,  // Use the extracted ID number
+        userRole: "SUPERUSER",
+        visible: true,
+        userId: null,
+        adminId: null,
+        isDeleted: false
     };
 
-    console.log("Comment Data:", comment);  // Log the comment data before sending it
+    console.log("Sending comment data:", comment);
 
     try {
         const response = await axios.post('http://localhost:8080/comments/add', comment);
-        const newCommentWithRelativeTime = {
-            ...response.data,
-            relativeTime: moment(response.data.timestamp).fromNow()
-        };
-        setComments(prevComments => [newCommentWithRelativeTime, ...prevComments]);
-        setNewComment('');
+        if (response.data) {
+            console.log("Comment response:", response.data);
+            const processedComment = {
+                ...response.data,
+                relativeTime: moment(response.data.timestamp).fromNow()
+            };
+            setComments(prevComments => [processedComment, ...prevComments]);
+            setNewComment('');
+        }
     } catch (error) {
         console.error("Error adding comment:", error);
-        if (error.response) {
-            console.error("Response data:", error.response.data);
-            console.error("Response status:", error.response.status);
-        }
+        console.error("Error details:", error.response?.data);
+        alert("Failed to add comment. Please try again.");
     }
 };
-
-
 
 const handleDeletePost = (postId) => {
     if (!loggedInSuperUser) {
@@ -352,18 +444,17 @@ const handleDeletePost = (postId) => {
 };
 
 
-    const handleDeleteComment = (commentId, commentSuperUserId) => {
-        if (!loggedInSuperUser) {
-            alert("Please log in to delete comments.");
-            return;
-        }
-        if (loggedInSuperUser.superuserId === commentSuperUserId || loggedInSuperUser.superuserId === currentPostOwner) {
-            setItemToDelete(commentId);
-            setIsDeleteCommentDialogOpen(true);
-        } else {
-            alert("You don't have permission to delete this comment.");
-        }
-    };
+// Update the handleDeleteComment function to allow superusers to delete any comment
+const handleDeleteComment = (commentId) => {
+    if (!loggedInSuperUser) {
+        alert("Please log in to delete comments.");
+        return;
+    }
+    
+    // SuperUser can delete any comment, so we don't need to check ownership
+    setItemToDelete(commentId);
+    setIsDeleteCommentDialogOpen(true);
+};
 
     const confirmDeletePost = async () => {
         try {
@@ -378,29 +469,53 @@ const handleDeletePost = (postId) => {
     
 
     const confirmDeleteComment = async () => {
+        if (!loggedInSuperUser?.superuserId) {
+            alert("Superuser ID is missing. Unable to delete comment.");
+            return;
+        }
+
         try {
-            await axios.delete(`http://localhost:8080/comments/${itemToDelete}`, {
-                params: {
-                    superuserId: loggedInSuperUser.superuserId
-                }
-            });
+            // Make the DELETE request to the backend
+            await axios.delete(
+                `http://localhost:8080/comments/${itemToDelete}/superuser/${loggedInSuperUser.superuserId}`
+            );
+
+            // Update the frontend to reflect the deleted comment
             setComments(comments.filter(comment => comment.commentId !== itemToDelete));
             setIsDeleteCommentDialogOpen(false);
         } catch (error) {
             console.error("Error deleting comment:", error);
-            alert("Failed to delete comment. You may not have permission.");
+            alert("Failed to delete comment. Please try again.");
         }
     };
 
+    const getPostImage = (post) => {
+        if (!post.image) return null;
+        
+        if (post.image.startsWith('data:')) {
+            return post.image;
+        }
+        
+        if (post.image.startsWith('http')) {
+            return post.image;
+        }
+        
+        return `http://localhost:8080${post.image}`;
+    };
+
     const formatTimestamp = (timestamp) => {
-        const momentDate = moment(timestamp);
-        return momentDate.format('dddd, MMMM D, YYYY [at] h:mm A');
+        const momentDate = moment(timestamp, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
+        return momentDate.isValid() 
+            ? momentDate.format('dddd, MMMM D, YYYY [at] h:mm A')
+            : 'Invalid date';
     };
-
+    
     const getRelativeTime = (timestamp) => {
-        return moment(timestamp).fromNow();
+        const momentDate = moment(timestamp, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
+        return momentDate.isValid() 
+            ? momentDate.fromNow()
+            : 'Invalid date';
     };
-
     const handleClosePost = () => {
         setNewPostContent('');
         setImagePreview(null);
@@ -484,37 +599,65 @@ const handleDeletePost = (postId) => {
                 <div className="post-list">
                     {posts.map((post) => (
                         <div key={post.postId} className="post-card">
-                            <div className="card-container">
-                            <div className="name-container">
+                            <div className="card-container" style={{ position: 'relative' }}>
+    {post.isSubmittedReport && post.status && (loggedInSuperUser) && (
+        <div className="sutraffic-light-container">
+            <TrafficLights
+                className="sutrafficlights"
+                status={post.status}
+                isClickable={false}
+                onChange={() => {}}
+            />
+        </div>
+    )}
+                           {/* Replace the delete icon section in the name-container with this code */}
+<div className="name-container">
     <img src={superuserProfilePictures[post.superUserId] || defaultProfile} alt="SuperUser Avatar" />
-    <h5>{post.fullName} ({post.superuseridNumber})</h5>
-    {/* Remove ownership check here, allowing all SuperUsers to see delete icon */}
+    <h5>
+        {post.fullName || post.fullname} 
+        {post.idNumber || post.idnumber || post.superuseridNumber ? 
+            ` (${post.idNumber || post.idnumber || post.superuseridNumber})` : ''}
+    </h5>
     {loggedInSuperUser && (
         <img
             src="/delete.png"
             alt="Delete"
             className="delete-icon"
             onClick={() => handleDeletePost(post.postId)}
-            style={{ cursor: 'pointer', width: '20px', height: '20px', marginLeft: 'auto' }}
+            style={{ 
+                cursor: 'pointer', 
+                width: '20px', 
+                height: '20px',
+                position: 'absolute',
+                right: '15px',
+                top: '15px'
+            }}
         />
     )}
 </div>
 
-                                <div className="timestamp">
-                                    <span className="formatted-date">{formatTimestamp(post.timestamp)}</span>
-                                    <br />
-                                    <span className="relative-time">{getRelativeTime(post.timestamp)}</span>
-                                </div>
+<div className="timestamp" style={{ marginBottom: '10px', color: '#666' }}>
+    <div className="formatted-date" style={{ fontSize: '14px' }}>
+        {moment(post.timestamp, 'YYYY-MM-DD HH:mm:ss.SSSSSS').format('dddd, MMMM D, YYYY [at] h:mm A')}
+    </div>
+    <div className="relative-time" style={{ fontSize: '12px', color: '#888' }}>
+        {moment(post.timestamp, 'YYYY-MM-DD HH:mm:ss.SSSSSS').fromNow()}
+    </div>
+</div>
                                 <div className="card-contents">
                                     <p>{post.content}</p>
-                                    {post.image && (
-                                        <img
-                                            className="post-image"
-                                            alt="Post"
-                                            src={post.image}
-                                            style={{ maxWidth: '100%', height: 'auto' }}
-                                        />
-                                    )}
+                                   {post.image && (
+    <img
+        className="post-image"
+        alt="Post"
+        src={getPostImage(post)}
+        onError={(e) => {
+            console.error('Error loading image:', post.image);
+            e.target.style.display = 'none';
+        }}
+        style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px' }}
+    />
+)}
                                 </div>
                                 <div className="footer-line" />
                                 <div className="footer-actions">
@@ -558,63 +701,71 @@ const handleDeletePost = (postId) => {
                             <div className="comment-header">
                                 <div className="superuser-info-container">
                                     <span className="superuser-info">
-                                        {comment.fullName} ({comment.superuseridNumber})
+                                        {comment.fullName} 
+                                        {comment.idNumber && ` (${comment.idNumber})`}
                                     </span>
-                                    {(loggedInSuperUser && (loggedInSuperUser.superuserId === comment.superuserId || loggedInSuperUser.superuserId === currentPostOwner)) && (
+                                    {/* Show delete button for all comments if user is logged in */}
+                                    {loggedInSuperUser && (
                                         <img
                                             src="/delete.png"
                                             alt="Delete"
                                             className="delete-icon"
-                                            onClick={() => handleDeleteComment(comment.commentId, comment.superuserId)}
+                                            onClick={() => handleDeleteComment(comment.commentId)}
                                         />
                                     )}
                                 </div>
                                 <div className="timestamp-container">
-                                    <span className="formatted-time">
-                                        {formatTimestamp(comment.timestamp)}
-                                    </span>
-                                    <span className="relative-time">
-                                        {comment.relativeTime}
-                                    </span>
+                                    {comment.timestamp && (
+                                        <>
+                                            <span className="formatted-time">
+                                                {moment(comment.timestamp)
+                                                    .utcOffset('+08:00')
+                                                    .format('dddd, MMMM D, YYYY [at] h:mm A')}
+                                            </span>
+                                            <span className="relative-time">
+                                                {moment(comment.timestamp).utcOffset('+08:00').fromNow()}
+                                            </span>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                             <p>{comment.content}</p>
                         </div>
                     ))}
                 </DialogContent>
-                <DialogActions>
-                    <div className="add-comment" style={{ display: 'flex', width: '100%', padding: '10px' }}>
-                        <input
-                            type="text"
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                            placeholder="Add a comment..."
-                            style={{ 
-                                flexGrow: 1, 
-                                marginRight: '10px', 
-                                padding: '8px', 
-                                border: '1px solid #ccc', 
-                                borderRadius: '4px' 
-                            }}
-                        />
-                        <Button 
-                            onClick={handleAddComment}
-                            variant="contained"
-                            sx={{ 
-                                backgroundColor: '#8A252C', 
-                                color: 'white',
-                                '&:hover': {
-                                    backgroundColor: '#f9d67b',
-                                    color: 'black'
-                                },
-                                transition: 'all 0.3s ease'
-                            }}
-                        >
-                            Comment
-                        </Button>
-                    </div>
-                </DialogActions>
-            </Dialog>
+    <DialogActions>
+        <div className="add-comment" style={{ display: 'flex', width: '100%', padding: '10px' }}>
+            <input
+                type="text"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Add a comment..."
+                style={{ 
+                    flexGrow: 1, 
+                    marginRight: '10px', 
+                    padding: '8px', 
+                    border: '1px solid #ccc', 
+                    borderRadius: '4px' 
+                }}
+            />
+           <Button 
+    onClick={() => handleAddComment()} // Changed this line
+    variant="contained"
+    sx={{ 
+        backgroundColor: '#8A252C', 
+        color: 'white',
+        '&:hover': {
+            backgroundColor: '#f9d67b',
+            color: 'black'
+        },
+        transition: 'all 0.3s ease'
+    }}
+>
+    Comment
+</Button>
+        </div>
+    </DialogActions>
+</Dialog>
 
             <Dialog open={isDeletePostDialogOpen} onClose={() => setIsDeletePostDialogOpen(false)}>
                 <DialogTitle>Confirm Delete</DialogTitle>
