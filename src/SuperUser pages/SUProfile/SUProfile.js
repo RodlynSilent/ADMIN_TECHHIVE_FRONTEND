@@ -38,7 +38,7 @@ const SUProfile = () => {
   }, []);
 
   const fetchProfilePicture = (superuserId) => {
-    fetch(`http://localhost:8080/superuser/profile/getProfilePicture/${superuserId}`, {
+    fetch(`https://techhivebackend-production-86d4.up.railway.app/superuser/profile/getProfilePicture/${superuserId}`, {
       credentials: 'include'
     })
       .then(response => {
@@ -78,7 +78,7 @@ const SUProfile = () => {
       return;
     }
   
-    fetch(`http://localhost:8080/superuser/updateSuperUserPassword?superuserId=${superuser.superuserId}`, {
+    fetch(`https://techhivebackend-production-86d4.up.railway.app/superuser/updateSuperUserPassword?superuserId=${superuser.superuserId}`, {
       method: "PUT",
       credentials: 'include',  // Important for session cookies
       headers: {
@@ -165,7 +165,7 @@ const SUProfile = () => {
     formData.append("superuserId", superuser.superuserId);
     formData.append("file", file);
 
-    fetch("http://localhost:8080/superuser/profile/uploadProfilePicture", {
+    fetch("https://techhivebackend-production-86d4.up.railway.app/superuser/profile/uploadProfilePicture", {
       method: "POST",
       credentials: 'include',
       body: formData,
