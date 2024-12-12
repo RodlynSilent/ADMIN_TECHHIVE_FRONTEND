@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an Axios instance with base configuration
 const axiosInstance = axios.create({
-  baseURL: 'https://techhivebackend-production-86d4.up.railway.app',
+  baseURL: 'http://localhost:8080',
   withCredentials: true, // Enable sending cookies with requests
   headers: {
     'Content-Type': 'application/json',
